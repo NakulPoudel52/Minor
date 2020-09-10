@@ -1,0 +1,10 @@
+{% extends "myapp/base.html" %}
+
+
+{% block body %}
+<li>
+{%for patient in patients%}
+ <ul>{{patient}}</ul>
+
+</li>
+{% endblock %}
