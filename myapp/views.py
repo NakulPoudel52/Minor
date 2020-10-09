@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 #from .models import notification,disease
+from .models import doctor,type,notification_for_doctor,notification_for_patient,hospital
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 
@@ -52,14 +53,50 @@ def profile_patient(request):
       return render(request,"myapp/patients/profile.html",context)
 
 def request_appointment(request):
-      context = {}
+      message = None
+      if request.method =='POST':
+            doctor_id = request.POST['doctor']
+            dtr = doctor.objects.get(pk=doctor_id)
+            usr = request.user
+            n = notification_for_doctor(doctors=dtr,patients=usr)
+            n.save()
+            message = True
+
+      doctors = doctor.objects.all()
+      hospitals = hospital.objects.all()
+      context = {"doctors":doctors,
+      "hospitals":hospitals,
+      "message":message
+      }
       return render(request,"myapp/patients/requestappointment.html",context)
 
 
 def notification_patient(request):
       context = {}
       return render(request,"myapp/patients/notification.html",context)
-
+def notification_doctor(request):
+      flag = None
+      if request.method=='POST':
+            meeting_name = request.POST['Meeting name']
+            meeting_password = request.POST['Zoom-Meeting id']
+            meeting_id = request.POST['Name']
+            date = request.POST['date']
+            start_time = request.POST['start time']
+            end_time = request.POST['end time']
+            message = request.POST['message']
+            doctor = request.user
+            patient_id = request.POST['patient']
+            patient = user.object.get(pk=patient_id)
+            n = notification_for_patient(doctors=doctor,patients=patient,meeting_id=meeting_id,message=message,start_time=start_time,end_time=end_time,meeting_name=meeting_name)
+            n.save()
+            
+            flag = True
+            
+      n = notification_for_doctor.objects.get(doctors=request.user.doctor_intro)
+      print(n)
+      context = {"info":n,
+      "flag":flag}
+      return render(request,"myapp/doctor/notification.html",context)
 
 # def home(request):
 #     if not request.user.is_authenticated:

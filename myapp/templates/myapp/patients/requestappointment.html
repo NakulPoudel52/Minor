@@ -1,1 +1,57 @@
 {%extends 'myapp/patients/patientdashboard.html'%}
+{%load static %}
+{%block title%}
+panel
+{%endblock%}
+{%block body%}
+{%if message%}
+<script>
+    alert('Appointment request send');
+</script>
+{%endif%}
+<section class="team-agile py-lg-5">
+    <div class="container py-sm-5 pt-5 pb-0">
+        <div class="title-section text-center pb-lg-5">
+            <h4>world of medicine</h4>
+            <h3 class="w3ls-title text-center text-capitalize">the medical staff</h3>
+        </div>
+        {%for doctor in doctors%}
+        <div class="row mt-5 pb-lg-5">
+            <div class="col-md-4 border p-0 my-auto">
+                <img src="{% static 'myapp/images/doctor.jpg' %}" class="img-fluid" alt="team-img" />
+            </div>
+            <div class="col-md-8 team-text mt-md-0 mt-5">
+                <h4>Dr. {{doctor.user.username}}</h4>
+                <small>{{doctor.specialization}}</small>
+                <p class="my-3">Donec consequat sapien ut leo cursus rhoncus.Quisque velit nisi, pretium ut lacinia in, elementum id
+                    enim. Cras ultricies ligula Nullam dui mi, vulputate ac metus at, semper varius orci. Nulla accumsan
+                    ac elit in congue.</p>
+                <ul class="list-group mb-3">
+                    <li class="list-group-item border-0">
+                        <i class="far fa-check-square  mr-3"></i>Virtial Hospital,Kathmandu</li>
+                    <li class="list-group-item border-0 py-0">
+                        <i class="far fa-check-square  mr-3"></i>
+                        Experience :  years</li>
+                    <li class="list-group-item border-0">
+                        <i class="far fa-check-square  mr-3"></i>
+                        Hospitals :{%for hospital in doctor.hospitals.all%}<ol>{{hospital.name}},{{hospital.address}}</ol>
+                    {%endfor%}
+                    </li>
+                    <li class="list-group-item border-0 py-0">
+                        <i class="far fa-check-square  mr-3"></i>USA</li>
+                    <li class="list-group-item border-0">
+                        <i class="far fa-clock  mr-3"></i>
+                        <span class="ot">MON - SAT : 11:00 AM - 1:00 PM , 1:00 PM - 4:00 PM </span>
+                    </li>
+                </ul>
+                <form action="{%url 'request_appointment' %}" method="POST">
+                {% csrf_token %}
+                {{doctor.pk}}
+                <button value="{{doctor.pk}}" name="doctor" class="btn_apt" data-toggle="modal" data-target="#exampleModalLabel2">make an appointment </a>
+                </form>
+            </div>
+        </div>
+        {%endfor%}
+    </div>
+</section>
+{%endblock%}

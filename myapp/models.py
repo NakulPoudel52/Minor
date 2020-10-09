@@ -9,6 +9,9 @@ class type(models.Model):
     user_type_data=((1,"Doctor"),(2,"Patients"),(3,"admin"))
     user_type=models.IntegerField(choices=user_type_data,blank=True,null=True)
 
+    def __str__(self):
+        return f"{self.user.username} is {self.user_type}"
+
 @receiver(post_save, sender=User)
 def create_user_type(sender, instance, created, **kwargs):
     if created:
@@ -20,33 +23,36 @@ def save_user_type(sender, instance, **kwargs):
 
 
 class doctor(models.Model):
-    doctor_id = models.OneToOneField(User,on_delete=models.CASCADE,related_name="doctor_intro")
+    user = models.OneToOneField(User,on_delete=models.CASCADE,related_name="doctor_intro")
     specialization = models.TextField(max_length=64)
     def __str__(self):
-        return f"{self.doctor_id.username},{self.specialization},{self.hospital_id.name}"
+        return f"{self.doctor_id.username}{self.specialization}"
 
 
 class hospital(models.Model):
     name = models.TextField(max_length=200)
     address = models.TextField(max_length=100)
     phone = models.CharField(max_length=10)
-    doctors = models.ManyToManyField(doctor,blank=True,related_name="hospitaldoctor")
+    doctors = models.ManyToManyField(doctor,blank=True,related_name="hospitals")
     def __str__(self):
         return f"{self.name},{self.address}"
 
 class notification_for_doctor(models.Model):
-    patients_id = models.ForeignKey(User,on_delete=models.CASCADE)
-    doctor_id = models.ForeignKey(doctor,on_delete=models.CASCADE)
+    patients = models.ForeignKey(User,on_delete=models.CASCADE)
+    doctors = models.ForeignKey(doctor,on_delete=models.CASCADE)
+    def __str__(self):
+        return f"{self.patients.username},{self.doctors.user.username}"
     
 
 class notification_for_patient(models.Model):
-    patients_id = models.ForeignKey(User,on_delete=models.CASCADE)
-    doctor_id = models.ForeignKey(doctor,on_delete=models.CASCADE)
+    patients = models.ForeignKey(User,on_delete=models.CASCADE)
+    doctors = models.ForeignKey(doctor,on_delete=models.CASCADE)
     meeting_id = models.CharField(max_length=25)
     password = models.CharField(max_length=25)
     message = models.TextField(max_length=500)
     start_time = models.DateTimeField( )
     end_time = models.DateTimeField()
+    meeting_name = models.TextField(max_length=50)
 
 
 

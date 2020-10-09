@@ -12,5 +12,7 @@ urlpatterns = [
    path("profilepatient",views.profile_patient,name="profile_patient"),
    path("requestappointment/",views.request_appointment,name="request_appointment"),
    path("notificationpatient",views.notification_patient,name="notification_patient"),
+   path("doctor/notification",views.notification_doctor,name="notification_doctor"),
+   
    #path("search/",views.search,name="search"),
 ]
