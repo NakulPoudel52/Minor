@@ -1,13 +1,17 @@
 {%extends 'myapp/doctor/doctordashboard.html'%}
 {%load static%}
 {% block body %}
-
+{%if flag%}
+<script>alert('Done')
+</script>
+{%endif%}
 <section class="team-agile py-lg-5">
     <div class="container py-sm-5 pt-5 pb-0">
         <div class="title-section text-center pb-lg-5">
             <h4>world of medicine</h4>
             <h3 class="w3ls-title text-center text-capitalize">Your Notifications</h3>
         </div>
+        {%for info in info%}
         <div class="row mt-5 pb-lg-5">
             <div class="col-md-4 border p-0 my-auto">
                 <img src="{%static 'myapp/images/patient.jpg'%}" class="img-fluid" alt="team-img" />
@@ -31,9 +35,11 @@
                         <i class="far fa-check-square  mr-3"></i>Nepal</li>
                     
                 </ul>
+                <h5>Hello:{{info.patients.id}}</h5>
                 <a href="#" class="btn_apt" data-toggle="modal" data-target="#exampleModalLabel2">Acknowledge appointment </a>
             </div>
         </div>
+        
         
     </div>
        
@@ -60,7 +66,8 @@
                 <div class="wthree-info">
 
                     <div class="login">
-                        <form action="#" method="post">
+                        <form action="{%url 'notification_doctor'%}" method="post">
+                            {% csrf_token %}
                             <div class="form-group">
                                 <label for="recipient-name" class="col-form-label">Meeting name</label>
                                 <input type="text" class="form-control" placeholder=" " name="Meeting name" id="recipient-name" required="">
@@ -93,9 +100,9 @@
                                 <label for="exampleFormControlTextarea1">Message</label>
                                 <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="message"></textarea>
                               </div>
-                              <button value="{{user.pk}}" name="patient" class="btn_apt" data-toggle="modal" data-target="#exampleModalLabel2">Acknowledge appointment </a>
+                              <button value="{{info.patients.id}}" name="patient" class="btn_apt" data-toggle="modal" data-target="#exampleModalLabel2">Acknowledge appointment </a>
 
-                            
+                         
                         </form>
                     </div>
                 </div>
@@ -103,9 +110,10 @@
         </div>
     </div>
 </div>
+{%endfor%}
 <!-- //Appointment modal -->
 <!-- js -->
-<script src="static 'myapp/js/jquery-2.2.3.min.js'"></script>
+<script src="{%static 'myapp/js/jquery-2.2.3.min.js'%}"></script>
 <!-- //js -->
 <!-- //fixed quick contact -->
 <script>
@@ -125,10 +133,11 @@
         });
     });
 </script>
+
 <!-- //fixed quick contact -->
 <!--start-date-piker-->
-<link rel="stylesheet" href="static 'myapp/css/jquery-ui.css'" />
-<script src="static 'myapp/js/jquery-ui.js'"></script>
+<link rel="stylesheet" href="{%static 'myapp/css/jquery-ui.css'%}" />
+<script src="{%static 'myapp/js/jquery-ui.js'%}"></script>
 <script>
     $(function () {
         $("#datepicker,#datepicker1").datepicker();
@@ -154,5 +163,5 @@
 ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="{%static 'myapp/js/bootstrap.js'%}"></script>
-
+   
 {% endblock %}

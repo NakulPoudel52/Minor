@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 #from .models import notification,disease
-from .models import doctor,type,notification_for_doctor,notification_for_patient,hospital
+from .models import doctor,type,notification_for_doctor,notification_for_patient,hospital,User
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 
@@ -72,7 +72,8 @@ def request_appointment(request):
 
 
 def notification_patient(request):
-      context = {}
+      info = notification_for_patient.objects.filter(patients=request.user)
+      context = {"info":info}
       return render(request,"myapp/patients/notification.html",context)
 def notification_doctor(request):
       flag = None
@@ -84,15 +85,16 @@ def notification_doctor(request):
             start_time = request.POST['start time']
             end_time = request.POST['end time']
             message = request.POST['message']
-            doctor = request.user
+            doctor = request.user.doctor_intro
+            print(doctor)
             patient_id = request.POST['patient']
-            patient = user.object.get(pk=patient_id)
-            n = notification_for_patient(doctors=doctor,patients=patient,meeting_id=meeting_id,message=message,start_time=start_time,end_time=end_time,meeting_name=meeting_name)
+            patient = User.objects.get(pk=patient_id)
+            n = notification_for_patient(doctors=doctor,patients=patient,meeting_id=meeting_id,message=message,start_time=start_time,end_time=end_time,meeting_name=meeting_name,password=meeting_password)
             n.save()
-            
+            print('done*************************')
             flag = True
             
-      n = notification_for_doctor.objects.get(doctors=request.user.doctor_intro)
+      n = notification_for_doctor.objects.filter(doctors=request.user.doctor_intro)
       print(n)
       context = {"info":n,
       "flag":flag}

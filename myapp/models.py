@@ -26,7 +26,7 @@ class doctor(models.Model):
     user = models.OneToOneField(User,on_delete=models.CASCADE,related_name="doctor_intro")
     specialization = models.TextField(max_length=64)
     def __str__(self):
-        return f"{self.doctor_id.username}{self.specialization}"
+        return f"{self.user.username}{self.specialization}"
 
 
 class hospital(models.Model):
@@ -50,8 +50,9 @@ class notification_for_patient(models.Model):
     meeting_id = models.CharField(max_length=25)
     password = models.CharField(max_length=25)
     message = models.TextField(max_length=500)
-    start_time = models.DateTimeField( )
-    end_time = models.DateTimeField()
+    date = models.DateField(null=True)
+    start_time = models.TimeField( null=True)
+    end_time = models.TimeField(null=True)
     meeting_name = models.TextField(max_length=50)
 
 
