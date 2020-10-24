@@ -1,7 +1,28 @@
 {% extends "myapp/base2.html" %}
+{% load crispy_forms_tags %}
 {% block title %}Registration{% endblock %}
 
 {% block body %}
 
 Registration page
+<div class="content-section " >
+    <form method="POST">
+        {% csrf_token %}
+    <div class="form-group"> 
+        <fieldset class="form-group">
+            <legend class="border-bottom mb-4">Join Today</legend>
+          <div class="form-control"> {{ user_form|crispy }}</div> 
+            
+        </fieldset>
+        <div class="form-group">
+            <button class="btn btn-outline-info mx-10  btn-primary" type="submit">Sign Up</button>
+        </div>
+    </div>
+    </form>
+    <div class="border-top pt-3">
+        <small class="text-muted">
+            Already Have An Account? <a class="ml-2" href="#">Sign In</a>
+        </small>
+    </div>
+</div>
 {% endblock %}

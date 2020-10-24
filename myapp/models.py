@@ -4,22 +4,22 @@ from django.dispatch import receiver
 from django.db.models.signals import post_save
 
 # Create your models here.
-class type(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+class Type(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE,related_name='type')
     user_type_data=((1,"Doctor"),(2,"Patients"),(3,"admin"))
-    user_type=models.IntegerField(choices=user_type_data,blank=True,null=True)
+    user_type=models.IntegerField(choices=user_type_data,blank=True,null=False)
 
     def __str__(self):
         return f"{self.user.username} is {self.user_type}"
 
-@receiver(post_save, sender=User)
-def create_user_type(sender, instance, created, **kwargs):
-    if created:
-        type.objects.create(user=instance)
+# @receiver(post_save, sender=User)
+# def create_user_type(sender, instance, created, **kwargs):
+#     if created:
+#         Type.objects.create(user=instance)
 
-@receiver(post_save, sender=User)
-def save_user_type(sender, instance, **kwargs):
-    instance.type.save()
+# @receiver(post_save, sender=User)
+# def save_user_type(sender, instance, **kwargs):
+#     instance.type.save()
 
 
 class doctor(models.Model):

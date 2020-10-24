@@ -1,10 +1,13 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.http import HttpResponse, HttpResponseRedirect
 #from .models import notification,disease
-from .models import doctor,type,notification_for_doctor,notification_for_patient,hospital,User
+from .models import doctor,Type,notification_for_doctor,notification_for_patient,hospital,User
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
-
+from django.contrib import messages
+from myapp.forms import UserRegisterForm
+from django import forms
+from django.db import transaction
 
 
 # Create your views here.
@@ -23,10 +26,27 @@ def show_loginpage(request):
       else:
             return HttpResponseRedirect(reverse('admin:index'))
 
+
+def register(request):
+      if request.method == 'POST':
+            user_form = UserRegisterForm(request.POST)
+            if user_form.is_valid():
+                  user = user_form.save()
+                  username = user_form.cleaned_data.get('username')
+                  user_type = user_form.cleaned_data.get('Doctor_or_Patient')
+                  t = Type(user=user,user_type=user_type)
+                  t.save()
+                  messages.success(request, f'Account created for {username}!')
+                  return redirect('do_login')
+      else:
+            user_form = UserRegisterForm()
+      return render(request, "myapp/registration.html", {'user_form': user_form})
+
 def do_login(request):
       username = request.POST["username"]
       password = request.POST["password"]
       user = authenticate(request, username=username, password=password)
+      print(user)
       if user is not None:
             login(request, user)
             print('***********')
