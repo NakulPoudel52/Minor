@@ -1,11 +1,11 @@
 from django.shortcuts import render,redirect
 from django.http import HttpResponse, HttpResponseRedirect
 #from .models import notification,disease
-from .models import doctor,Type,notification_for_doctor,notification_for_patient,hospital,User
+from .models import doctor,Type,notification,hospital,User
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 from django.contrib import messages
-from myapp.forms import UserRegisterForm
+from myapp.forms import UserRegisterForm,UserAppointmentRequestForm,NotificationForm
 from django import forms
 from django.db import transaction
 
@@ -37,7 +37,7 @@ def register(request):
                   t = Type(user=user,user_type=user_type)
                   t.save()
                   messages.success(request, f'Account created for {username}!')
-                  return redirect('do_login')
+                  return redirect('show_login')
       else:
             user_form = UserRegisterForm()
       return render(request, "myapp/registration.html", {'user_form': user_form})
@@ -49,7 +49,6 @@ def do_login(request):
       print(user)
       if user is not None:
             login(request, user)
-            print('***********')
             check = request.user.type.user_type
             if check==1:
                   return render(request,'myapp/doctor/doctordashboard.html')
@@ -74,51 +73,62 @@ def profile_patient(request):
 
 def request_appointment(request):
       message = None
-      if request.method =='POST':
-            doctor_id = request.POST['doctor']
-            dtr = doctor.objects.get(pk=doctor_id)
-            usr = request.user
-            n = notification_for_doctor(doctors=dtr,patients=usr)
-            n.save()
-            message = True
-
+      if request.method == 'POST':
+            request_appointment_form = UserAppointmentRequestForm(request.POST)
+            notification_form = NotificationForm(request.POST)
+            if request_appointment_form.is_valid and notification_form.is_valid:
+                  request_appointment_form.save()
+                  notification_form.save()
+                  message = True
+            # doctor_id = request.POST['doctor']
+            # dtr = doctor.objects.get(pk=doctor_id)
+            # usr = request.user
+            # n = notification(doctors=dtr,patients=usr)
+            # n.save()
+           
+      request_appointment_form = UserAppointmentRequestForm()
+      notification_form = NotificationForm()
       doctors = doctor.objects.all()
       hospitals = hospital.objects.all()
       context = {"doctors":doctors,
       "hospitals":hospitals,
-      "message":message
+      "message":message,
+      "request_appointment_form":request_appointment_form,
+      "notification_form":notification_form,
+
       }
       return render(request,"myapp/patients/requestappointment.html",context)
 
 
 def notification_patient(request):
-      info = notification_for_patient.objects.filter(patients=request.user)
+      info = notification.objects.filter(patients=request.user)
+
       context = {"info":info}
       return render(request,"myapp/patients/notification.html",context)
 def notification_doctor(request):
-      flag = None
-      if request.method=='POST':
-            meeting_name = request.POST['Meeting name']
-            meeting_password = request.POST['Zoom-Meeting id']
-            meeting_id = request.POST['Name']
-            date = request.POST['date']
-            start_time = request.POST['start time']
-            end_time = request.POST['end time']
-            message = request.POST['message']
-            doctor = request.user.doctor_intro
-            print(doctor)
-            patient_id = request.POST['patient']
-            patient = User.objects.get(pk=patient_id)
-            n = notification_for_patient(doctors=doctor,patients=patient,meeting_id=meeting_id,message=message,start_time=start_time,end_time=end_time,meeting_name=meeting_name,password=meeting_password)
-            n.save()
-            print('done*************************')
-            flag = True
+      # flag = None
+      # if request.method=='POST':
+      #       meeting_name = request.POST['Meeting name']
+      #       meeting_password = request.POST['Zoom-Meeting id']
+      #       meeting_id = request.POST['Name']
+      #       date = request.POST['date']
+      #       start_time = request.POST['start time']
+      #       end_time = request.POST['end time']
+      #       message = request.POST['message']
+      #       doctor = request.user.doctor_intro
+      #       print(doctor)
+      #       patient_id = request.POST['patient']
+      #       patient = User.objects.get(pk=patient_id)
+      #       n = notification(doctors=doctor,patients=patient,meeting_id=meeting_id,message=message,start_time=start_time,end_time=end_time,meeting_name=meeting_name,password=meeting_password)
+      #       n.save()
+      #       print('done*************************')
+      #       flag = True
             
-      n = notification_for_doctor.objects.filter(doctors=request.user.doctor_intro)
-      print(n)
-      context = {"info":n,
-      "flag":flag}
-      return render(request,"myapp/doctor/notification.html",context)
+      # n = notification.objects.filter(doctors=request.user.doctor_intro)
+      # print(n)
+      # context = {"info":n,
+      # "flag":flag}
+      return render(request,"myapp/doctor/notification.html")#,context
 
 # def home(request):
 #     if not request.user.is_authenticated:
@@ -156,5 +166,4 @@ def notification_doctor(request):
 #       context={
 #             'diseaseobj':disease.objects.filter(Disease__icontains=disease_name)  
 #       }
-#       return render(request,"myapp/login.html",context)
-      
+#       return render(request,"myapp/login.html",context

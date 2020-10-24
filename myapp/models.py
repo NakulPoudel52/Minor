@@ -37,23 +37,26 @@ class hospital(models.Model):
     def __str__(self):
         return f"{self.name},{self.address}"
 
-class notification_for_doctor(models.Model):
-    patients = models.ForeignKey(User,on_delete=models.CASCADE)
-    doctors = models.ForeignKey(doctor,on_delete=models.CASCADE)
-    def __str__(self):
-        return f"{self.patients.username},{self.doctors.user.username}"
-    
-
-class notification_for_patient(models.Model):
-    patients = models.ForeignKey(User,on_delete=models.CASCADE)
-    doctors = models.ForeignKey(doctor,on_delete=models.CASCADE)
-    meeting_id = models.CharField(max_length=25)
-    password = models.CharField(max_length=25)
-    message = models.TextField(max_length=500)
+class meeting_details(models.Model):
+    meeting_id = models.CharField(max_length=25,blank =True)
+    password = models.CharField(max_length=25,blank =True)
     date = models.DateField(null=True)
     start_time = models.TimeField( null=True)
     end_time = models.TimeField(null=True)
-    meeting_name = models.TextField(max_length=50)
+    meeting_name = models.TextField(max_length=50,blank =True)
+    receipt = models.ImageField(upload_to = 'images/')
+
+class notification(models.Model):
+    patients = models.ForeignKey(User,on_delete=models.CASCADE)
+    doctors = models.ForeignKey(doctor,on_delete=models.CASCADE)
+    message_doctor = models.TextField(max_length=500,blank=True)
+    message_patient = models.TextField(max_length=500,blank=True)
+    meeting = models.OneToOneField(meeting_details,on_delete=models.CASCADE)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    read = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.patients.username},{self.doctors.user.username}"
 
 
 

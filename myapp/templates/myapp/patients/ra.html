@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    {{ request_appointment_form.non_field_errors }}
+<div class="fieldWrapper">
+    {{ request_appointment_form.date.errors }}
+    <label for="{{ request_appointment_form.date.id_for_label }}">Email subject:</label>
+    {{ request_appointment_form.date }}
+</div>
+<div class="fieldWrapper">
+    {{ request_appointment_form.start_time.errors }}
+    <label for="{{ request_appointment_form.start_time.id_for_label }}">Your message:</label>
+    {{ request_appointment_form.start_time }}
+</div>
+<div class="fieldWrapper">
+    {{ request_appointment_form.end_time.errors }}
+    <label for="{{ request_appointment_form.end_time.id_for_label }}">Your email address:</label>
+    {{ request_appointment_form.end_time }}
+</div>
+<div class="fieldWrapper">
+    {{ request_appointment_form.receipt.errors }}
+    <label for="{{ request_appointment_form.receipt.id_for_label }}">CC yourself?</label>
+    {{ request_appointment_form.receipt }}
+</div>
+</body>
+</html>
