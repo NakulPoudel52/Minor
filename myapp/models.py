@@ -2,8 +2,22 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.dispatch import receiver
 from django.db.models.signals import post_save
+import datetime
+import json
+from psycopg2.extras import DateRange, DateTimeTZRange, NumericRange, Range
+from django.contrib.postgres import forms, lookups
+from multiselectfield import MultiSelectField
+from PIL import Image
+
+#from .utils import AttributeSetter
+__all__ = [
+    'RangeField', 'IntegerRangeField', 'BigIntegerRangeField',
+    'DecimalRangeField', 'DateTimeRangeField', 'DateRangeField',
+    'FloatRangeField',
+]
 
 # Create your models here.
+#address,phone,profile pic
 class Type(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE,related_name='type')
     user_type_data=((1,"Doctor"),(2,"Patients"),(3,"admin"))
@@ -21,19 +35,67 @@ class Type(models.Model):
 # def save_user_type(sender, instance, **kwargs):
 #     instance.type.save()
 
-
-class doctor(models.Model):
+#payment_details,NMC_ID,which_hospitals,notes,timing,feesdetail
+class doctor_profile(models.Model):
     user = models.OneToOneField(User,on_delete=models.CASCADE,related_name="doctor_intro")
+    profile_pic = models.ImageField(default='default.jpg', upload_to='profile_pics')
     specialization = models.TextField(max_length=64)
+    payment_details = models.TextField(max_length=64,blank=True)
+    NMC_ID = models.IntegerField(blank=True,null=True,default=0)
+    # timing = models.da
+    feesdetail = models.IntegerField(blank=True,default=500)
+    def save(self):
+        super().save()
+
+        img = Image.open(self.profile_pic.path)
+
+        if img.height > 300 or img.width > 300:
+            output_size = (300, 300)
+            img.thumbnail(output_size)
+            img.save(self.profile_pic.path)
+
     def __str__(self):
         return f"{self.user.username}{self.specialization}"
 
+DAYS_OF_WEEK = (
+    (1, 'Sunday'),
+    (2, 'Monday'),
+    (3, 'Tuesday'),
+    (4, 'Wednesday'),
+    (5, 'Thursday'),
+    (6, 'Friday'),
+    (7, 'Saturday'),
+    
+)
+
+class schedule(models.Model):
+    DAYS_OF_WEEK = (
+    (1, 'Sunday'),
+    (2, 'Monday'),
+    (3, 'Tuesday'),
+    (4, 'Wednesday'),
+    (5, 'Thursday'),
+    (6, 'Friday'),
+    (7, 'Saturday'),)
+    
+
+    day = models.IntegerField( choices=DAYS_OF_WEEK)
+    StartTime = models.TimeField(null=True,blank=True )
+    BreakStartTime = models.TimeField(null=True,blank=True )
+    BreakEndTime = models.TimeField(null=True,blank=True )
+    EndTime = models.TimeField(null=True,blank=True)
+    doctor = models.ForeignKey(doctor_profile,on_delete=models.CASCADE,related_name='schedule')
+
+
+class patients_profile(models.Model):
+    user = models.OneToOneField(User,on_delete=models.CASCADE,related_name="patient_intro")
+    profile_pic = models.ImageField()
 
 class hospital(models.Model):
     name = models.TextField(max_length=200)
     address = models.TextField(max_length=100)
     phone = models.CharField(max_length=10)
-    doctors = models.ManyToManyField(doctor,blank=True,related_name="hospitals")
+    doctors = models.ManyToManyField(doctor_profile,blank=True,related_name="hospitals")
     def __str__(self):
         return f"{self.name},{self.address}"
 
@@ -48,7 +110,7 @@ class meeting_details(models.Model):
 
 class notification(models.Model):
     patients = models.ForeignKey(User,on_delete=models.CASCADE)
-    doctors = models.ForeignKey(doctor,on_delete=models.CASCADE)
+    doctors = models.ForeignKey(doctor_profile,on_delete=models.CASCADE)
     message_doctor = models.TextField(max_length=500,blank=True)
     message_patient = models.TextField(max_length=500,blank=True)
     meeting = models.OneToOneField(meeting_details,on_delete=models.CASCADE)

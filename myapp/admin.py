@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import notification,hospital,doctor,Type
+from .models import notification,hospital,doctor_profile,Type,schedule
 
 # Register your models here.
 class hospitalInline(admin.StackedInline):
@@ -17,5 +17,6 @@ class hospitalAdmin(admin.ModelAdmin):
 admin.site.register(notification)
 #admin.site.register(notification_for_patient)
 admin.site.register(hospital,hospitalAdmin)
-admin.site.register(doctor,doctorAdmin)
+admin.site.register(doctor_profile,doctorAdmin)
 admin.site.register(Type)
+admin.site.register(schedule)

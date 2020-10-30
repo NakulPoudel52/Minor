@@ -1,1 +1,28 @@
-{extends 'myapp/doctor/doctordashboard.html'}
+{%extends "myapp/doctor/doctordashboard.html"%}
+{% load crispy_forms_tags %}
+
+{% block title %}profile doctor{% endblock %}
+
+{% block body %}
+<div class="content-section form-group">
+    <div class="media ">
+      <div class="text-center"><img class="rounded-circle account-img  text-center" src="{{ user.doctor_intro.profile_pic.url }}">
+      </div>
+      <div class="media-body">
+       
+    
+      </div>
+    </div>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <fieldset class="form-group">
+            <legend class="border-bottom mb-4">Profile Info</legend>
+            {{d_form|crispy}}
+            {{h_form|crispy}}
+        </fieldset>
+        <div class="form-group">
+            <button class="btn btn-outline-info" type="submit">Update</button>
+        </div>
+    </form>
+  </div>
+{% endblock %}

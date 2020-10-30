@@ -1,13 +1,14 @@
 from django.shortcuts import render,redirect
 from django.http import HttpResponse, HttpResponseRedirect
 #from .models import notification,disease
-from .models import doctor,Type,notification,hospital,User
+from .models import doctor_profile,Type,notification,hospital,User,schedule
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 from django.contrib import messages
-from myapp.forms import UserRegisterForm,UserAppointmentRequestForm,NotificationForm
+from myapp.forms import UserRegisterForm,UserAppointmentRequestForm,NotificationForm,DoctorProfileForm,HospitalForm,ScheduleForm
 from django import forms
 from django.db import transaction
+import datetime
 
 
 # Create your views here.
@@ -31,9 +32,10 @@ def register(request):
       if request.method == 'POST':
             user_form = UserRegisterForm(request.POST)
             if user_form.is_valid():
-                  user = user_form.save()
                   username = user_form.cleaned_data.get('username')
                   user_type = user_form.cleaned_data.get('Doctor_or_Patient')
+                  print(user_type)
+                  user = user_form.save()
                   t = Type(user=user,user_type=user_type)
                   t.save()
                   messages.success(request, f'Account created for {username}!')
@@ -51,6 +53,9 @@ def do_login(request):
             login(request, user)
             check = request.user.type.user_type
             if check==1:
+                  if not doctor_profile.objects.filter(user=request.user).first():
+                        print('**********************************************')
+                        doctor_profile(user = request.user).save()
                   return render(request,'myapp/doctor/doctordashboard.html')
             elif check==2:
                   return render(request,'myapp/patients/patientdashboard.html')
@@ -67,6 +72,71 @@ def show_register(request):
      return render(request,"myapp/registration.html")
 def do_register(request):
       return render(request,"myapp/login.html")
+def profile_doctor(request):
+      if request.method == 'POST':
+            d_form = DoctorProfileForm(request.POST,request.FILES,instance=request.user.doctor_intro,)
+            if d_form.is_valid:
+                  d_form.save()
+            return redirect('profile_doctor')
+      d_form = DoctorProfileForm(instance=request.user.doctor_intro)
+      #h_form = HospitalForm()
+      context = {'d_form':d_form}
+      return render(request,"myapp/doctor/profile.html",context)
+
+def scheduler(request):
+      if request.method == 'POST':
+            s_form = ScheduleForm(request.POST)
+            time = request.POST["StartTime"]
+            starttime = (s_form['StartTime'].value())+':00'
+            breakstarttime = (s_form['BreakStartTime'].value())+':00'
+            breakendtime = (s_form['BreakEndTime'].value())+':00'
+            endtime = (s_form['EndTime'].value())+':00'
+            print(breakstarttime)
+            print(type(starttime))
+            stime = datetime.datetime.strptime(starttime, '%H:%M:%S')
+            if breakstarttime == ':00':
+                  breakstarttime = '00:00:00'
+                  breakendtime = '00:00:00'
+            bstime = datetime.datetime.strptime(breakstarttime, '%H:%M:%S')
+            betime = datetime.datetime.strptime(breakendtime, '%H:%M:%S')
+            etime = datetime.datetime.strptime(endtime, '%H:%M:%S')
+            print(stime)
+            print(type(stime.time()))
+            update_request = request.POST.copy()
+            update_request.update({'StartTime': stime.time(),'BreakStartTime':bstime.time(),'BreakEndTime':betime.time(),'EndTime':etime.time()})
+            s_form = ScheduleForm(update_request)
+            print(s_form)
+            day = int(request.POST["day"])
+            print('***********************')
+            print(day)
+            s_form.errors
+            if s_form.is_valid():
+                  print('********************************')
+                  start_time = s_form.cleaned_data.get('StartTime')
+                  break_start_time =s_form.cleaned_data.get('BreakStartTime')
+                  break_end_time = s_form.cleaned_data.get('BreakEndTime')
+                  end_time = s_form.cleaned_data.get('EndTime')
+
+                  if not (schedule.objects.filter(day=day,doctor=request.user.doctor_intro)):
+                        s = schedule(day=day,StartTime=start_time,BreakStartTime=break_start_time,BreakEndTime=break_end_time,EndTime=end_time,doctor=request.user.doctor_intro)
+                        s.save()
+                        print(start_time,break_start_time,break_end_time,end_time)
+                  else:
+                        s = schedule.objects.filter(day=day,doctor=request.user.doctor_intro)
+                        # s.StartTime = start_time
+                        # s.BreakEndTime = break_end_time
+                        # s.BreakStartTime = break_start_time
+                        # s.EndTime = end_time
+                        s.update(StartTime=start_time,BreakStartTime=break_start_time,BreakEndTime=break_end_time,EndTime=end_time)
+
+            print(s_form.cleaned_data)
+            print(s_form.errors.as_data())
+            return redirect('schedule')
+
+
+      s_form = ScheduleForm()
+      context = {'s_form':s_form,'days':['sunday','monday','tuesday','wednesday','thursday','Friday','saturday']}
+      return render(request,"myapp/doctor/schedule.html",context)
 def profile_patient(request):
       context = {}
       return render(request,"myapp/patients/profile.html",context)

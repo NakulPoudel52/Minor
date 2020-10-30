@@ -1,0 +1,37 @@
+{%extends "myapp/doctor/doctordashboard.html"%}
+{% load crispy_forms_tags %}
+
+{% block title %}schedule{% endblock %}
+
+{% block body %}
+<table>
+<tr>
+    <th>Day</th>
+    <th>starttime</th>
+    <th>Breakstarttime</th>
+    <th>Breakendtime</th>
+    <th>Endtime</th>
+</tr>
+{%for i in days%}
+<tr>
+
+<div>
+    <form method="POST">
+        {%csrf_token%}
+   <td>{{i}}</td> 
+    <td>{{s_form.StartTime}}</td>
+   <td>{{s_form.BreakStartTime}}</td> 
+    <td>{{s_form.BreakEndTime}}</td>
+   <td>{{s_form.EndTime}}</td> 
+    <td>
+        <button name="day" value="{{forloop.counter}}">save</button></td>
+    </form>
+</div>
+
+</tr>
+{%endfor%}
+</table>   
+
+</form>
+
+{% endblock %}
