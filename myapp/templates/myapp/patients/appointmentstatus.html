@@ -1,0 +1,88 @@
+{%extends 'myapp/patients/patientdashboard.html'%}
+
+{%block body%}
+<div class="container py-sm-5 pt-5 pb-0">
+    <div class="title-section text-center pb-lg-5">
+        <h4>Future of medicine</h4>
+        <h3 class="w3ls-title text-center text-capitalize">Your status</h3>
+    </div>
+{%for status in status%}
+{%if status.read %}
+<section class="team-agile py-lg-5">
+    <div class="pb-5 typo-wthree">
+        <div class="container py-sm-5 pt-5 pb-0">
+        <div class="d-flex p-2 bg-flex mb-1">Appointment NO:{{status.id}}</div>
+         <div class="col-md-8 team-text mt-md-0 mt-5">
+            <h4>Doctor Name: DR{{status.doctors.user.username}}</h4>
+            <small>{{status.doctors.specialization}}</small>
+            <p class="my-1">Message from doctor:{{status.message_patient}}</p>
+            <ul class="list-group mb-3">
+               <p >Details to join:</p>
+                <li class="list-group-item border-0">
+                    <i class="far fa-check-square  mr-3"></i>meeting_name:{{status.meeting.meeting_name}}</li>
+                    <li class="list-group-item border-0 py-0">
+                <li class="list-group-item border-0 py-0">
+                    <i class="far fa-check-square  mr-3"></i>
+                    Meeting ID : {{status.meeting.meeting_id}}</li>
+                <li class="list-group-item border-0">
+                    <i class="far fa-check-square  mr-3"></i>
+                    Meeting password : {{status.meeting.password}}</li>
+                <li class="list-group-item border-0">
+                    <i class="fas fa-calendar-alt  mr-3"></i>
+                    <span class="ot">Date of Appointment:{{status.meeting.date}} </span>
+                </li>
+                <li class="list-group-item border-0">
+                <i class="far fa-clock  mr-3"></i>
+                    <span class="ot">Start_time:{{status.meeting.start_time}}</span>
+                </li>
+                <li class="list-group-item border-0">
+                <i class="far fa-clock  mr-3"></i>
+                    <span class="ot">End_time:{{status.meeting.end_time}} </span>
+                </li>
+            </ul>
+            
+        </div>
+        <form action="https://zoom.us/join" target="_blank">
+            <input type="submit" class="btn_apt" data-toggle="modal" data-target="#exampleModalLabel2" value="Join" />
+        </form>
+        
+        </div>
+    </div>
+    </section>
+{%else%}
+<section class="team-agile py-lg-5">
+    <div class="pb-5 typo-wthree">
+        <div class="container py-sm-5 pt-5 pb-0">
+
+        <div class="d-flex p-2 bg-flex mb-1">Appointment NO:{{status.id}}</div>
+         <div class="col-md-8 team-text mt-md-0 mt-5">
+            <h4>Doctor Name: DR.{{status.doctors.user.username}}</h4>
+            <small>{{status.doctors.specialization}}</small>
+            <ul class="list-group mb-3">
+                
+                 <li class="list-group-item border-0">
+                     <i class="fas fa-calendar-alt  mr-3"></i>
+                     <span class="ot">Date of Appointment:{{status.meeting.date}} </span>
+                 </li>
+                 <li class="list-group-item border-0">
+                 <i class="far fa-clock  mr-3"></i>
+                     <span class="ot">Start_time:{{status.meeting.start_time}}</span>
+                 </li>
+                 <li class="list-group-item border-0">
+                 <i class="far fa-clock  mr-3"></i>
+                     <span class="ot">End_time:{{status.meeting.end_time}} </span>
+                 </li>
+                 <li>
+                    <div class="d-flex p-2 bg-flex mb-1 .bg-info">status:<strong>Pending</strong></div>
+                 </li>
+             </ul>
+        </div>
+        
+        
+        </div>
+    </div>
+    </section>
+{%endif%}
+
+{%endfor%}
+    {%endblock%}

@@ -11,9 +11,9 @@ urlpatterns = [
    path("profilepatient",views.profile_patient,name="profile_patient"),
    path("profiledoctor",views.profile_doctor,name="profile_doctor"),
    path("requestappointment/",views.request_appointment,name="request_appointment"),
-   path("notificationpatient",views.notification_patient,name="notification_patient"),
-   path("doctor/notification",views.notification_doctor,name="notification_doctor"),
-   path("doctor/schedule",views.scheduler,name="schedule")
+   path("appointmentstatus",views.appointment_status,name="appointment_status"),
+   path("doctor/notification",views.notify,name="notification_doctor"),
+   path("doctor/schedule",views.scheduler,name="schedule"),
    
-   #path("search/",views.search,name="search"),
+   path("search/",views.search_doctors,name="searchdoctors"),
 ]

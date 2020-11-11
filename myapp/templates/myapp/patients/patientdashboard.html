@@ -47,11 +47,23 @@
         
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ml-lg-auto text-center">
+                      
+                        
+                       
+                        
+                      
                         <li class="nav-item  mr-3">
                             <a class="nav-link text-white" href="{%url 'logout'%}">Logout
                                 <span class="sr-only">(current)</span>
                             </a>
+                            
+                            <div class="nav-link text-white mr-3"> Wallet: Rs. {{wallet}}</div>
+                            
+                            </div>
+                              
+                             
                         </li>
+                        
                        
                     </ul>
                 </div>
@@ -64,7 +76,7 @@
         <!-- //container -->
     </div>
     <!-- breadcrumbs -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-secondary">
+    <nav class="navbar-nav navbar-expand-lg navbar-light bg-secondary">
        
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -79,7 +91,7 @@
               <a class="nav-link" href="#">Daily monitoring </a>
             </li>
             <li class="nav-item active">
-              <a class="nav-link" href="{%url 'notification_patient' %}">Notifications</a>
+              <a class="nav-link" href="{%url 'appointment_status' %}">Appointment status</a>
             </li>
             <li class="nav-item active ">
               <a class="nav-link " href="{%url 'request_appointment'%}" id="navbar" role="button"  aria-haspopup="true" aria-expanded="false">
@@ -88,9 +100,11 @@
               
             </li>
           </ul>
-          <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-            <button type="button" class="btn btn-success">Search doctors</button>
+          
+          <form action="{%url 'searchdoctors'%}" class="form-inline my-2 my-lg-0" method="GET">
+            {%csrf_token%}
+            <input class="form-control mr-sm-2" type="search" placeholder="Search doctors" name="test" aria-label="Search">
+            
           </form>
         </div>
       </nav>

@@ -1,41 +1,46 @@
 {%extends 'myapp/doctor/doctordashboard.html'%}
 {%load static%}
+{% load crispy_forms_tags %}
+
 {% block body %}
 {%if flag%}
 <script>alert('Done')
 </script>
 {%endif%}
+
 <section class="team-agile py-lg-5">
+    <div class="title-section text-center pb-lg-5">
+        <h4>world of medicine</h4>
+        
+        <h3 class="w3ls-title text-center text-capitalize">Your Notifications</h3>
+    </div>
+    {%for info in info%}
     <div class="container py-sm-5 pt-5 pb-0">
-        <div class="title-section text-center pb-lg-5">
-            <h4>world of medicine</h4>
-            <h3 class="w3ls-title text-center text-capitalize">Your Notifications</h3>
-        </div>
-        {%for info in info%}
+        
+        
         <div class="row mt-5 pb-lg-5">
             <div class="col-md-4 border p-0 my-auto">
-                <img src="{%static 'myapp/images/patient.jpg'%}" class="img-fluid" alt="team-img" />
+                <img src="{{info.patients.profile_pic.url}}" class="img-fluid" alt="team-img" />
             </div>
             <div class="col-md-8 team-text mt-md-0 mt-5">
-                <h4>MR/S. {{info.patients.username}}</h4>
+                <h4>MR/S. {{info.patients.user.username}}</h4>
                 <small>PATIENT_Id:{{info.patients.id}}</small>
-                <p class="my-3">Donec consequat sapien ut leo cursus rhoncus.Quisque velit nisi, pretium ut lacinia in, elementum id
-                    enim. Cras ultricies ligula Nullam dui mi, vulputate ac metus at, semper varius orci. Nulla accumsan
-                    ac elit in congue.</p>
+                <p class="my-3">Message:{{info.message_patient}}</p>
                 <ul class="list-group mb-3">
                     <li class="list-group-item border-0">
-                        <i class="far fa-check-square  mr-3"></i>virtual hospital</li>
+                        <i class="far fa-check-square  mr-3"></i>Date: {{info.meeting.date}}</li>
                     <li class="list-group-item border-0 py-0">
                         <i class="far fa-check-square  mr-3"></i>
-                        phone : 10 digit</li>
+                        Start time: {{info.meeting.start_time}}</li>
                     <li class="list-group-item border-0">
                         <i class="far fa-check-square  mr-3"></i>
-                        State : </li>
+                        End time: {{info.meeting.end_time}} </li>
+
                     <li class="list-group-item border-0 py-0">
-                        <i class="far fa-check-square  mr-3"></i>Nepal</li>
-                    
+                        <i class="far fa-check-square  mr-3"></i>View receipt:<a href="{{info.meeting.receipt.url}}" target="_blank">payment receipt</a></li>  
+
                 </ul>
-                <h5>Hello:{{info.patients.id}}</h5>
+                
                 <a href="#" class="btn_apt" data-toggle="modal" data-target="#exampleModalLabel2">Acknowledge appointment </a>
             </div>
         </div>
@@ -68,38 +73,8 @@
                     <div class="login">
                         <form action="{%url 'notification_doctor'%}" method="post">
                             {% csrf_token %}
-                            <div class="form-group">
-                                <label for="recipient-name" class="col-form-label">Meeting name</label>
-                                <input type="text" class="form-control" placeholder=" " name="Meeting name" id="recipient-name" required="">
-                            </div>
-                            <div class="form-group">
-                                <label for="recipient-phone" class="col-form-label">Zoom-Meeting id</label>
-                                <input type="text" class="form-control" placeholder=" " name="Zoom-Meeting id" id="recipient-phone" required="">
-                            </div>
-                            <div class="form-group">
-                                <label for="recipient-phone" class="col-form-label">Password</label>
-                                <input type="text" class="form-control" placeholder=" " name="Name" id="recipient-phone" required="">
-                            </div>
-                            <div class="form-group">
-                                <label for="datepicker" class="col-form-label">Choose Date of Appointment</label>
-                                <input placeholder="Date" class="date form-control" id="datepicker" type="date" name="date" value="" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = '';}"
-                                    required="" />
-                            </div>
-                            <div class="form-group">
-                                <label for="datepicker" class="col-form-label">Start time</label>
-                                <input placeholder="Date" class="date form-control" id="datepicker" type="time" name="start time" value="" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = '';}"
-                                    required="" />
-                            </div>
-                            <div class="form-group">
-                                <label for="datepicker" class="col-form-label">End time</label>
-                                <input placeholder="Date" class="date form-control" id="datepicker" type="time" name="end time" value="" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = '';}"
-                                    required="" />
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="exampleFormControlTextarea1">Message</label>
-                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="message"></textarea>
-                              </div>
+                            {{a_form|crispy}}
+                            {{n_form.message_patient|as_crispy_field}}
                               <button value="{{info.patients.id}}" name="patient" class="btn_apt" data-toggle="modal" data-target="#exampleModalLabel2">Acknowledge appointment </a>
 
                          

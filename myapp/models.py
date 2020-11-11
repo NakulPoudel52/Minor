@@ -42,15 +42,15 @@ class doctor_profile(models.Model):
     specialization = models.TextField(max_length=64)
     payment_details = models.TextField(max_length=64,blank=True)
     NMC_ID = models.IntegerField(blank=True,null=True,default=0)
-    # timing = models.da
     feesdetail = models.IntegerField(blank=True,default=500)
+    wallet = models.IntegerField(default=1000,null=True,blank=True)
     def save(self):
         super().save()
 
         img = Image.open(self.profile_pic.path)
 
-        if img.height > 300 or img.width > 300:
-            output_size = (300, 300)
+        if img.height > 300 or img.width > 500:
+            output_size = (450, 300)
             img.thumbnail(output_size)
             img.save(self.profile_pic.path)
 
@@ -84,12 +84,23 @@ class schedule(models.Model):
     BreakStartTime = models.TimeField(null=True,blank=True )
     BreakEndTime = models.TimeField(null=True,blank=True )
     EndTime = models.TimeField(null=True,blank=True)
-    doctor = models.ForeignKey(doctor_profile,on_delete=models.CASCADE,related_name='schedule')
+    doctor = models.ForeignKey(doctor_profile,on_delete=models.CASCADE,related_name='timing')
 
 
 class patients_profile(models.Model):
     user = models.OneToOneField(User,on_delete=models.CASCADE,related_name="patient_intro")
-    profile_pic = models.ImageField()
+    profile_pic = models.ImageField(default='default.jpg', upload_to='profile_pics')
+    wallet = models.IntegerField(default=1000,null=True,blank=True)
+    def save(self):
+        super().save()
+
+        img = Image.open(self.profile_pic.path)
+
+        if img.height > 300 or img.width > 400:
+            output_size = (300, 400)
+            img.thumbnail(output_size)
+            img.save(self.profile_pic.path)
+
 
 class hospital(models.Model):
     name = models.TextField(max_length=200)
@@ -106,19 +117,19 @@ class meeting_details(models.Model):
     start_time = models.TimeField( null=True)
     end_time = models.TimeField(null=True)
     meeting_name = models.TextField(max_length=50,blank =True)
-    receipt = models.ImageField(upload_to = 'images/')
+    receipt = models.ImageField(upload_to = 'receipt')
 
 class notification(models.Model):
-    patients = models.ForeignKey(User,on_delete=models.CASCADE)
+    patients = models.ForeignKey(patients_profile,on_delete=models.CASCADE)
     doctors = models.ForeignKey(doctor_profile,on_delete=models.CASCADE)
     message_doctor = models.TextField(max_length=500,blank=True)
     message_patient = models.TextField(max_length=500,blank=True)
-    meeting = models.OneToOneField(meeting_details,on_delete=models.CASCADE)
+    meeting = models.OneToOneField(meeting_details,on_delete=models.CASCADE,related_name="meeting_detail")
     timestamp = models.DateTimeField(auto_now_add=True)
     read = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.patients.username},{self.doctors.user.username}"
+        return f"{self.patients.user.username},{self.doctors.user.username}"
 
 
 

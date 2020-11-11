@@ -18,6 +18,9 @@
         }
     </script>
     <!-- Custom Theme files -->
+    {%block link%}
+    {%endblock%}
+    
     <link href="{% static 'myapp/css/bootstrap.css' %}" type="text/css" rel="stylesheet" media="all">
     <link href="{% static 'myapp/css/style.css' %}" type="text/css" rel="stylesheet" media="all">
     <!-- font-awesome icons -->
@@ -58,18 +61,7 @@
                         <li class="nav-item  mr-3 active">
                             <a class="nav-link text-white text-capitalize" href="services.html">services</a>
                         </li>
-                        <li class="nav-item dropdown mr-3">
-                            <a class="nav-link dropdown-toggle  text-white text-capitalize" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-                                aria-haspopup="true" aria-expanded="false">
-                                Dropdown
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="gallery.html">Gallery</a>
-                                <a class="dropdown-item" href="team.html">Team</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="typo.html">Typography</a>
-                            </div>
-                        </li>
+                   
                         <li class="nav-item">
                             <a class="nav-link  text-white text-capitalize" href="contact.html">contact</a>
                         </li>

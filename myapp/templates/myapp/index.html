@@ -3,8 +3,9 @@ Author URL: http://w3layouts.com
 License: Creative Commons Attribution 3.0 Unported
 License URL: http://creativecommons.org/licenses/by/3.0/
 -->
-{% load static %}
 
+{% load static %}
+{%comment%}
 <!DOCTYPE html>
 <html lang="zxx">
 
@@ -688,5 +689,119 @@ License URL: http://creativecommons.org/licenses/by/3.0/
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="{%static 'myapp/js/bootstrap.js'%}"></script>
 </body>
+
+</html>
+{%endcomment%}
+
+<!DOCTYPE html>
+<html lang="en">
+    {% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=<di>, initial-scale=1.0">
+
+    <title>VIRTUAL HOSPITAL</title>
+    <link rel="stylesheet" href="{%static 'myapp/css/home.css'%}">
+    <link rel="icon" href="4.jpg" type="image/icon type">
+</head>
+<body>
+    
+    <div class="bimages">
+    <div class="nav">
+        
+        
+        <ul>
+            <li><a href="lol.html">VIRTUAL HOSPITAL</a></li>
+            <li><a href="service.html">Services</a>
+            <li><a href="gallery.html">Gallery</a></li>
+            <li><a href="{%url 'show_login'%}">Login</a></li>
+            <li><a href="contact.html">Contact</a></li>
+           
+            
+        </ul>
+        
+            
+        </div>
+    </div>
+  
+    </div>
+        <section>
+            <div class="w-80" style="padding: 0;">
+            <div class="section-img">
+                <div class="section-bg-box">
+                    <div class="slide-left">
+                    <h1 class="animated slideInLeft">VIRTUAL HOSPITAL</h1>
+                    </div>
+                    <div class="slide-right">
+                     <h2 class="animated slideInRight">WE CARE ABOUT YOUR HEALTH</h2></div>
+                
+                </div>
+            </div>
+            <br/><br/>
+            <h1 class="welcome-text">WELCOME TO VIRTUAL HOSPITAL</h1>
+        </br>
+        <p> It began as an idea of a patient-oriented, socially responsible center, making superior quality healthcare services convenient and accessible for the community it serves. It aims to meet all healthcare needs of the nation through unparalleled patient care and wellness programs. It is dedicated to the seamless delivery of quality, patient-centric healthcare—which means supplying everything a patient may need, from acute critical care to rehabilitation to transitional care to home healthcare services—at an affordable cost. Our goal is to establish in this country a culture of continuous improvement in healthcare—not only by providing excellent healthcare services but also by conducting community health education seminars, outreach programs, and wellness programs in several parts of Nepal.
+
+        </p>
+            <br/>
+            <h2 class="welcome-text">OUR OUTSTANDING SERVICES</h2>
+            <br/>
+            <ol>
+                <li>Daily Monitoring</li>
+                <li>Meet Renowed Doctors</li>
+                <li>Virtual Prescription</li>
+                <li>Update the Patient Records</li>
+                <li>Notification for Visting Doctor Again</li>
+             </ol>
+             <br/>
+             <h1 class="welcome-text"  style="width: 20%;">About Us</h1>
+             <div class="about-box">
+                 <div>
+                    <div>
+                        <p>During this pandemic all over the world most of the patients suffering from other disease rather than COVID-19 are afraid to to go to hospital. This is platform than provides the online medical services to the people where the patient can interact with the doctor. The doctor can provide the medical suggestion and prescription to his/her email. The patient needs to explain his/her sufferings. In case of emergency, the patient’s directly needs to contact to the nearest hospital. So the patients do not need to deteorite  the health condition due to lack of time and resources and allowances.</p>
+                    <br/>
+                    </div>
+                   
+            </div>
+            </div>
+       
+           
+        </section>
+<footer>
+    <div class="w-80">
+        <div class="footer-box">
+            <h2><a href="service.html">Services</h2></a>
+                <a href="#">Daily Monitoring</a>
+                <a href="#">Meet Renowed Doctors</a>
+                <a href="#">Virtual Prescription</a>
+                <a href="#">Upadate Patient Record</a>
+                <a href="#">Notification for Patients</a>
+        </div>
+        <div class="footer-box">
+            <h2><a href="#">About Us</a></h2>
+            <a href="#">Virtual hospital</a>
+            <a href="#">Our Team</a>
+            <a href="#">Management</a>
+            <a href="#">Carrers</a>
+        </div>
+        <div class="footer-box">
+            <h2><a href="contact.html">Contact US</h2></a>
+            <a href="#">Post a Query</a>
+            <a href="#">Search Nearby Hospitals</a>
+            <a href="#">Emergency Numbers List</a>
+            <a href="#">Ask Question</a>
+        </div>
+        <div class="footer-box">
+            <h2><a href="#">Facilities</a></h2>
+            <a href="#">Daily Monitoring</a>
+            <a href="#">patient Dashboard</a>
+            <a href="#">Doctor Dashboar</a>
+            <a href="#">Patient-doctor Interaction</a>
+        </div>
+        <p>Copyright &copy;2020 Jeevan Kaphle</p>
+    </div>
+    
+</body>
+
 
 </html>

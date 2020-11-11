@@ -1,13 +1,17 @@
+{% comment %}
 {% extends "myapp/base2.html" %}
 
 
  
-
 {% block title %}
 Login
 {% endblock %}
+{%block link%}
+ 
+<link rel=”stylesheet” href="{% static 'myapp/css/login.css' %}">
+{%endblock%}
 {% block body %}
-<p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Unde veritatis ratione magni, dolorum nobis voluptate blanditiis deserunt in, id minima ut aspernatur ea! Commodi voluptates possimus iusto, eius ut eligendi?</p>
+{% endcomment %}
 {% comment %}<nav class="navbar navbar-expand-lg navbar-light bg-light">
   <a class="navbar-brand" href="#">Navbar</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
@@ -46,6 +50,7 @@ Login
 {%endif%}
 <button onclick="hello();">hello</button>
 -->{% endcomment %}
+{% comment %}
 {%if message%}
 {{messages}}
 {%endif%}
@@ -61,8 +66,83 @@ Login
 <input name="username" type="text"/>
 <input name="password" type="password"/>
 <input type="submit" value="Login"/>
+<div>
 </form>
+
 {% endblock %}
+{% endcomment %}
 
 
 
+<!DOCTYPE html>
+{% load static %} 
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width" >   
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="{% static 'myapp/css/login.css' %}">
+</head>
+<body>
+
+    <div class="bg-img">
+        <div class="content">
+          
+          <header> Login</header>
+          {% if messages %}
+            {% for message in messages %}
+              <div class="text-light alert alert-{{ message.tags }}">
+                {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+          {% if message %}
+          <p class="text-white bg-danger">{{message}}</p>
+          {% endif %}
+          <form action="{% url 'do_login' %}" method="post">
+            {% csrf_token %}
+            
+            <div class="field">
+              <span class="fa fa-user"></span>
+              <input name="username" type="text" required placeholder="username"/>
+            </div>
+  <div class="field space">
+              <span class="fa fa-lock"></span>
+              <input type="password" name="password" class="pass-key" required placeholder="Password">
+              <span class="show">show</span>
+            </div>
+  <div class="pass">
+              <a href="#">Forgot Password?</a>
+  </div>
+
+
+  <div class="field">
+              <input type="submit" value="Login">
+            </div>
+  </form>
+  
+  <div class="signup">
+  Don't have account?
+            <a href="register.html">Signup Now</a>
+          </div>
+  </div>
+  </div>
+  <script>
+        const pass_field = document.querySelector('.pass-key');
+        const showBtn = document.querySelector('.show');
+        showBtn.addEventListener('click', function(){
+         if(pass_field.type === "password"){
+           pass_field.type = "text";
+           showBtn.textContent = "hide";
+           showBtn.style.color = "#3498db";
+         }else{
+           pass_field.type = "password";
+           showBtn.textContent = "show";
+           showBtn.style.color = "#222";
+         }
+        });
+      </script>
+      <footer><p>Copyright &copy;2020 Virtual hospital</p></footer>  
+</body>
+</html>

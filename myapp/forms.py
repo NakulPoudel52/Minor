@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from .models import Type,meeting_details,notification,doctor_profile,hospital,schedule
+from .models import Type,meeting_details,notification,doctor_profile,hospital,schedule,patients_profile
 from django.forms.widgets import DateInput,TimeInput
 from multiselectfield import MultiSelectField
 
@@ -35,6 +35,18 @@ class NotificationForm(forms.ModelForm):
     class Meta:
         model = notification
         fields = ['message_doctor','message_patient']
+
+class AckForm(forms.ModelForm):
+
+    class Meta:
+        model = meeting_details
+        fields = ['meeting_name','meeting_id','password']
+
+class PatientProfileForm(forms.ModelForm):
+
+    class Meta:
+        model = patients_profile
+        fields = ['profile_pic']
 
 class DoctorProfileForm(forms.ModelForm):
 
