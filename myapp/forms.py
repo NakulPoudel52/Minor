@@ -4,7 +4,8 @@ from django.contrib.auth.forms import UserCreationForm
 from .models import Type,meeting_details,notification,doctor_profile,hospital,schedule,patients_profile
 from django.forms.widgets import DateInput,TimeInput
 from multiselectfield import MultiSelectField
-
+from django.core.exceptions import ValidationError
+from datetime import datetime, date,timedelta
 
 class UserRegisterForm(UserCreationForm):
     email = forms.EmailField()
@@ -30,6 +31,24 @@ class UserAppointmentRequestForm(forms.ModelForm):
             'start_time': TimeInput(attrs={'type':'time'}),
             'end_time':TimeInput(attrs={'type':'time'})
         }
+    def clean(self):
+        cleaned_data = super().clean()
+        date  = cleaned_data.get('date')
+        start_time = cleaned_data.get('start_time')
+        end_time = cleaned_data.get('end_time')
+        dtr = cleaned_data.get('doctor')
+        print('**********************************')
+        print(type(start_time))
+        print(start_time)
+        print(type(datetime.combine(date.today(), end_time) - datetime.combine(date.today(), start_time)))
+        #0:50:00
+        elapsed = datetime.combine(date.today(), end_time) - datetime.combine(date.today(), start_time)
+        if elapsed > timedelta(minutes=30):
+            raise forms.ValidationError('Time period must be less than 30 minute')
+
+
+
+
 class NotificationForm(forms.ModelForm):
 
     class Meta:

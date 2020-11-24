@@ -14,6 +14,8 @@ urlpatterns = [
    path("appointmentstatus",views.appointment_status,name="appointment_status"),
    path("doctor/notification",views.notify,name="notification_doctor"),
    path("doctor/schedule",views.scheduler,name="schedule"),
-   
+   path("dailymonitoring",views.dailymonitoring,name="dailymonitoring"),
+   path("searchhospital/",views.search_hospital,name="searchhospital"),
+  
    path("search/",views.search_doctors,name="searchdoctors"),
 ]

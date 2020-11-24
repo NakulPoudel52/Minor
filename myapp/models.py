@@ -87,6 +87,7 @@ class schedule(models.Model):
     doctor = models.ForeignKey(doctor_profile,on_delete=models.CASCADE,related_name='timing')
 
 
+
 class patients_profile(models.Model):
     user = models.OneToOneField(User,on_delete=models.CASCADE,related_name="patient_intro")
     profile_pic = models.ImageField(default='default.jpg', upload_to='profile_pics')
@@ -101,12 +102,19 @@ class patients_profile(models.Model):
             img.thumbnail(output_size)
             img.save(self.profile_pic.path)
 
+class Monitoring(models.Model):
+    value1 = models.PositiveIntegerField()
+    value2 = models.PositiveIntegerField(blank=True,null=True)
+    subject = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+    patient = models.ForeignKey(patients_profile,on_delete=models.CASCADE,related_name="monitor",null=True,blank=True)
 
 class hospital(models.Model):
     name = models.TextField(max_length=200)
     address = models.TextField(max_length=100)
     phone = models.CharField(max_length=10)
     doctors = models.ManyToManyField(doctor_profile,blank=True,related_name="hospitals")
+    picture  = models.ImageField(default='hospital.jpg',upload_to = 'hospital')
     def __str__(self):
         return f"{self.name},{self.address}"
 
@@ -121,7 +129,7 @@ class meeting_details(models.Model):
 
 class notification(models.Model):
     patients = models.ForeignKey(patients_profile,on_delete=models.CASCADE)
-    doctors = models.ForeignKey(doctor_profile,on_delete=models.CASCADE)
+    doctors = models.ForeignKey(doctor_profile,on_delete=models.CASCADE,related_name="meetings")
     message_doctor = models.TextField(max_length=500,blank=True)
     message_patient = models.TextField(max_length=500,blank=True)
     meeting = models.OneToOneField(meeting_details,on_delete=models.CASCADE,related_name="meeting_detail")
@@ -130,6 +138,8 @@ class notification(models.Model):
 
     def __str__(self):
         return f"{self.patients.user.username},{self.doctors.user.username}"
+
+
 
 
 

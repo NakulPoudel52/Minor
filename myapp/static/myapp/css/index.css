@@ -1,0 +1,309 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Aclonica&display=swap');
+.m-f{
+  font-family: 'Aclonica', sans-serif;
+}
+.m-f{
+  margin-top: 0.5%;
+  padding-left:29%;
+  font-size: 3vw;
+  
+}
+/* Add a black background color to the top navigation */
+.topnav {
+    background-color: #333;
+    overflow: hidden;
+    height:8.3%;
+    
+  }
+  
+  /* Style the links inside the navigation bar */
+  .topnav a {
+    float: right;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 1% 2%;
+    text-decoration: none;
+    font-size: 110%;
+  }
+
+
+  
+  /* Change the color of links on hover */
+  .topnav a:hover {
+    background-color: rgb(63, 10, 252);
+    color: white;
+  }
+
+  /* Add a color to the active/current link */
+  .topnav a {
+    background-color: #333;
+    color: white;
+  }
+  .topnav .search-container {
+    float: left;
+    margin-left: 4px;
+  }
+  
+  .topnav input[type=text] {
+    padding: 6px;
+    margin-top: 8px;
+    font-size: 17px;
+    border: none;
+  }
+  
+  
+  
+ 
+  .topnav .search-container button {
+    float: right;
+    padding: 6px 10px;
+    margin-top: 8px;
+    margin-right: 16px;
+    background: #ddd;
+    font-size: 20px;
+    border: none;
+    cursor: pointer;
+  }
+  .topnav .search-container button:hover {
+    background: #ccc;
+  }
+  @media screen and (max-width: 600px) {
+    .topnav .search-container {
+      float: none;
+    }
+    .topnav a, .topnav input[type=text], .topnav .search-container button {
+      float: none;
+      display: block;
+      text-align: left;
+      width: 100%;
+      margin: 0;
+      padding: 14px;
+    }
+    .topnav input[type=text] {
+      border: 1px solid #ccc;  
+    }
+  }
+/*SLIDING IMAGE*/
+#slider{
+  overflow:hidden;
+   /* display:block;
+  width:100%;
+  height:100%;  */
+}
+#slider figure{
+  position:relative;
+  width:500%;
+  margin:0;
+  left:0;
+  animation:20s slider infinite
+}
+#slider figure img{
+  width:20%;
+  height:50%;
+  float:left;
+}
+
+ @keyframes slider{
+  0%{
+      left:0;
+  }
+  20%{
+      left:0;
+  }
+  25%{
+      left:-100%;
+  }
+   45%{
+      left:-100%;
+  } 
+  50%{
+      left:-200%;
+  }
+  70%{
+      left:-200%;
+  }
+  75%{
+      left:-300%;
+  }
+  95%{
+      left:-300%;
+  }
+  100%{
+      left:-400%;
+  }
+ 
+} 
+/* SLIDING IMAGE END */
+
+
+.intro-container{
+  width:100%;
+  height:55%;
+  padding-left:5%;
+  padding-top: 24%;
+  background-color:white;
+  font-family: sans-serif;
+ 
+} 
+
+}
+.intro-text{
+  position:absolute;
+  top:50%;
+  left: 50%;
+  display: flex;
+  padding-top:0;
+  text-align:center;
+  flex-wrap: wrap;
+  padding-top: 5%;
+  transform: translate(-50%,-50%);
+  width:100%;
+  
+}
+
+
+
+
+.intro-img{
+  width:30%;
+  height:30%;
+  float:right;
+  
+}
+
+ /* .intro-text p{
+  display:inline;
+  text-align:center;
+  line-height: 40px;
+  flex-wrap: wrap;
+  
+}      */
+
+
+.intro-container span{
+  display:block;
+
+}
+
+
+
+.text1{
+  font-size: 2vw;
+  font-weight: 200%;
+  letter-spacing: 1vw;
+  margin-bottom:1.25%;
+  position: relative;
+  animation: text 3s 1;
+  padding-left: 15%;
+
+}
+
+.text2{
+  font-size: 2vw;
+  color:rgb(94, 233, 94);
+  padding-left:13%;
+}
+.text3{
+  font-size: 2vw;
+  color:rgb(77, 228, 77);
+  padding-left:33%;
+}
+.text4{
+  font-size: 2vw;
+  color:red;
+  padding-left:32%;
+  margin-bottom:3%;
+}
+
+.services{
+  
+  height:90%;
+  margin-top: 0%;
+}
+.service-content{
+
+   margin-top:6%;
+  display:flex;
+  /* width:100%; */
+   flex-wrap:wrap; 
+
+}
+
+.bucket{
+  background: rgb(248, 245, 245);
+  width:25%;
+  padding-top:0%;
+  margin: 3% 3%;
+  margin-top:5%;
+  color:black;
+  border: 5px solid rgb(194, 206, 194);
+}
+
+.bucket img{
+  padding-top: 5%;
+  height:80%;
+  width:80%;
+}
+.bucket h1
+{
+margin-top:12%;
+  font-size: 1.9vw;
+}
+.bucket p
+{
+  font-size: 1.3vw;
+  
+}
+.btn{
+  margin-left: 30%;  
+  background-color:transparent;
+  border:2px solid royalblue;
+  /* border-color:rgb(214, 209, 209); */
+  padding: 1% 2.5%;
+  font-size: 2vw;
+  font-weight: bolder;
+  text-decoration: none;
+  color:black;
+  transition:400ms ease-in-out;
+}
+.btn-trans:hover{
+  background-color: chartreuse;
+  color: black;
+  border-color: transparent;
+}
+
+
+
+footer{
+  width: 100%;
+  float: left;
+  color: white;
+padding-top: 20px;
+padding-left: 10px;
+background: rgb(75, 71, 71);
+}
+
+footer .footer-box{
+  width: 35%;
+  float: left;
+  height: 40%;
+}
+footer .footer-box a{
+  display: block;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  color: white;
+  font-size: 20px;
+  text-transform: capitalize;
+}
+footer .footer-box a:hover{
+  text-decoration: none;
+  color: red;
+}
+footer p{
+  clear: both;
+  background-color:brown;
+  padding: 10px;
+  text-align: center;
+  color: white;
+}

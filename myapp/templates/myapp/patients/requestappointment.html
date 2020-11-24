@@ -6,11 +6,12 @@ panel
 {%endblock%}
 {%block body%}
 
-{%if message%}
-<script>
-    alert('Appointment request send');
-</script>
-{%endif%}
+
+
+
+
+
+{{ request_appointment_form.non_field_errors }}
 {%for doctor in doctors%}
 <section class="team-agile py-lg-5">
     <div class="container py-sm-5 pt-5 pb-0">
@@ -75,10 +76,11 @@ panel
                 <div class="wthree-info">
 
                     <div class="login">
+                      {{ request_appointment_form.non_field_errors }}
+
                         <form action="#" method="POST" enctype="multipart/form-data">
                             {%csrf_token%}
                             {{ form.non_field_errors }}
-                            
                             
                                 {{ form.date.errors }}
                                 {{request_appointment_form.date|as_crispy_field}}
@@ -106,6 +108,7 @@ panel
         </div>
     </div>
 </div>
+
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">

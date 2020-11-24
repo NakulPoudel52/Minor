@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect
 from django.http import HttpResponse, HttpResponseRedirect
 #from .models import notification,disease
-from .models import doctor_profile,Type,notification,hospital,User,schedule,patients_profile,meeting_details
+from .models import doctor_profile,Type,notification,hospital,User,schedule,patients_profile,meeting_details,Monitoring
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 from django.contrib import messages
@@ -165,7 +165,7 @@ def profile_patient(request):
 
 
 def request_appointment(request):
-      message = None
+      
       if request.method == 'POST':
             print(request.POST["doctor"])
             
@@ -174,26 +174,39 @@ def request_appointment(request):
             notification_form = NotificationForm(request.POST)
             if request_appointment_form.is_valid() and notification_form.is_valid():
                   print(request_appointment_form.errors)
+                  date  = request_appointment_form.cleaned_data.get('date')
+                  start_time = request_appointment_form.cleaned_data.get('start_time')
+                  end_time = request_appointment_form.cleaned_data.get('end_time')
+                  if not validation(request=request,did=did,date=date,start_time=start_time,end_time=end_time,user=request.user):
+                        print(start_time,type(start_time),end_time,type(end_time))
+                        #10:00:00 <class 'datetime.time'> 11:00:00 <class 'datetime.time'>
+                        print('*************************************')
+                        print(notification_form.errors)
+                        ra = request_appointment_form.save()
+                        n=notification_form.save(commit=False)
+                        
+                        
+                        dtr = doctor_profile.objects.get(pk=did)
+                        new = patients_profile.objects.filter(user=request.user)
+                        new.update(wallet = request.user.patient_intro.wallet - dtr.feesdetail).save()
+                        dtr(wallet = dtr.feesdetail+dtr.wallet).save()
+                        n.doctors = dtr
+                        n.patients = request.user.patient_intro
+                        n.meeting = ra
+                        n.save()
+                        messages.success(request, 'Your appointment was send successfully!')
+            else:
                   print('*************************************')
-                  print(notification_form.errors)
-                  ra = request_appointment_form.save()
-                  n=notification_form.save(commit=False)
-                  
-                  
-                  dtr = doctor_profile.objects.get(pk=did)
-                  n.doctors = dtr
-                  n.patients = request.user.patient_intro
-                  n.meeting = ra
-                  n.save()
+                  return render(request,"myapp/patients/requestappointment.html",{"request_appointment_form":request_appointment_form,"form_error":True})
+                  print(request_appointment_form.errors) 
 
-                  message = True
             return redirect('request_appointment')
       
                   # usr = request.user
                   # n(doctors=dtr,patients=usr).save()
             
-            print('*************************************')
-            print(notification_form.errors)     
+            #print('*************************************')
+            print(request_appointment_form_form.errors)     
       
       request_appointment_form = UserAppointmentRequestForm()
       notification_form = NotificationForm()
@@ -212,7 +225,6 @@ def request_appointment(request):
       sdl = schedule.objects.all()
       context = {"doctors":doctors,
       "hospitals":hospitals,
-      "message":message,
       "request_appointment_form":request_appointment_form,
       "notification_form":notification_form,
       'days':['sunday','monday','tuesday','wednesday','thursday','Friday','saturday'],
@@ -278,7 +290,85 @@ def appointment_status(request):
       context = {'status':n}
       return render(request,'myapp/patients/appointmentstatus.html',context)
 
+def dailymonitoring(request):
+      if request.method == 'POST':
+            
+            value = int(request.POST["name"])
+            if value==1:
+                  temp = int(request.POST["temperature"])
+                  m = Monitoring(value1=temp,subject="temperature",patient=request.user.patient_intro)     
+                  m.save() 
 
+            
+            
+            elif value==2:
+                  syspressure = int(request.POST["systolic"])
+                  diaspressure = int(request.POST["diastolic"])
+                  m = Monitoring(value1=syspressure,value2=diaspressure,subject="pressure",patient=request.user.patient_intro)     
+                  m.save()
+
+      records = Monitoring.objects.filter(patient=request.user.patient_intro)
+      tem = []
+      ts = []
+      sp = []
+      dp = []
+      tsp = []
+      for record in records:
+            if record.subject == 'temperature':
+                  tem.append(record.value1)
+                  print(type(record.value1))
+                  t = record.timestamp.strftime("%m/%d/%Y, %H:%M:%S")  
+                  print(type(t))  
+                  ts.append(t)
+                  print(tem,ts)
+            elif record.subject == 'pressure':
+                  sp.append(record.value1)
+                  dp.append(record.value2)
+                  t = record.timestamp.strftime("%m/%d/%Y, %H:%M:%S")  
+                  tsp.append(t)
+
+
+
+
+
+      return render(request,'myapp/patients/dailymonitoring.html',{
+       
+        'tem':tem,
+        'ts':ts,
+        'sp':sp,
+        'dp':dp,
+        'tsp':tsp,
+    })
+
+def search_hospital(request):
+      if request.method == 'POST':
+            hname = request.POST['hospital']
+            h = hospital.objects.annotate(similarity=TrigramSimilarity('address',hname ),).filter(similarity__gt=0.2).order_by('-similarity')
+            page = request.GET.get('page', 1)
+
+            paginator = Paginator(h, 2)
+            try:
+                  hospitals = paginator.page(page)
+            except PageNotAnInteger:
+                  hospitals = paginator.page(1)
+            except EmptyPage:
+                  hospitals = paginator.page(paginator.num_pages)
+
+            return render(request,'myapp/searchhospital.html',{'hospitals':hospitals})
+      h = hospital.objects.all()
+      page = request.GET.get('page', 1)
+
+      paginator = Paginator(h, 2)
+      try:
+            hospitals = paginator.page(page)
+      except PageNotAnInteger:
+            hospitals = paginator.page(1)
+      except EmptyPage:
+            hospitals = paginator.page(paginator.num_pages)
+
+
+      
+      return render(request,'myapp/searchhospital.html',{'hospitals':hospitals})
 
 # def home(request):
 #     if not request.user.is_authenticated:
@@ -318,6 +408,7 @@ def search_doctors(request):
             request_appointment_form = UserAppointmentRequestForm(request.POST,request.FILES)
             notification_form = NotificationForm(request.POST)
             if request_appointment_form.is_valid() and notification_form.is_valid():
+                  
                   print(request_appointment_form.errors)
                   print('*************************************')
                   print(notification_form.errors)
@@ -370,3 +461,53 @@ def search_doctors(request):
       }
       return render(request,"myapp/patients/requestappointment.html",context)
 #User.objects.annotate(similarity=TrigramSimilarity('username', test),).filter(similarity__gt=0.3).order_by('-similarity')
+def validation(request,did,date,start_time,end_time,user):
+      print('1*****************************************')
+      if not (user.patient_intro.wallet >= 500):
+            messages.error(request, 'Recharge your wallet')
+            return True
+      else:
+            print('2*****************************************')
+            d = doctor_profile.objects.get(pk=did)
+            mts = d.meetings.all()
+
+            for mt in mts:
+                  detail = mt.meeting
+                  if detail.date == date:
+                        print('3*****************************************')
+                        if not (start_time<detail.start_time) and (end_time>detail.end_time):
+                              print('Time slot not available! Try another start and end time')
+                              
+                              messages.error(request, 'Time slot not available')
+                              return True
+                        else:
+                              print('4*****************************************')
+                              #d = doctor_profile.objebijap123cts.get(pk=did)
+                              day = date.weekday()+2
+                              if day==8:
+                                    day=1
+                              print(day)
+                              t = d.timing.filter(day=day).first()
+                              if t :
+                                    try:
+                                          if not (start_time>=t.StartTime and t.BreakStartTime<=end_time) or (start_time>=t.BreakEndTime and end_time<t.EndTime):
+                                                print('doctor not available1')
+                                                
+                                                messages.error(request,  'doctor not available')
+                                                return True
+                                    except TypeError:
+                                          if not (start_time>=t.StartTime and end_time<t.EndTime):
+                                                print('doctor not available1')
+                                                
+                                                messages.error(request,  'doctor not available')
+                                                return True
+                                          
+                              else:
+                                    print('doctor not available2')
+                                    
+                                    messages.error(request, 'doctor not available')
+                                    return True
+      
+
+                    
+            

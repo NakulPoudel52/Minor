@@ -691,7 +691,6 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 </body>
 
 </html>
-{%endcomment%}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -702,7 +701,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 
     <title>VIRTUAL HOSPITAL</title>
     <link rel="stylesheet" href="{%static 'myapp/css/home.css'%}">
-    <link rel="icon" href="4.jpg" type="image/icon type">
+    <link rel="icon" href="{% static 'myapp/images/4.jpg'%}" type="image/icon type">
 </head>
 <body>
     
@@ -803,5 +802,123 @@ License URL: http://creativecommons.org/licenses/by/3.0/
     
 </body>
 
+
+</html>
+{%endcomment%}
+<html>
+    {% load static %}
+<head>
+    <title>Virtual Hospital</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width initial-scale=1">
+    <link href="{% static 'myapp/css/index.css' %}" type="text/css" rel="stylesheet" >
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body>
+    
+    <div class="topnav">
+        <div class="home"><a href="{%url 'searchhospital'%}" >Search Hospitals
+        </a></div>
+        <div class="contact"><a href="contact.html">Contact</a></div>
+        <div class="login"><a href="{%url 'show_login'%}">Login</a></div>
+        <div class="home"><a href="index.html">Home</a></div>
+        
+        <div class="search-container">
+        <h2>VH</h1>
+        </div>
+        
+    </div>
+    <div id="slider">
+        <figure> 
+            <img src="{%static 'myapp/images/15.jpg'%}">
+            <img src="{%static 'myapp/images/14.jpg'%}">
+            <img src="{%static 'myapp/images/17.jpg'%}"> 
+            <img src="{%static 'myapp/images/1.jpg'%}">
+            <img src="{%static 'myapp/images/15.jpg'%}">
+        </figure>
+
+        <!-- <section class="intro"> -->
+            <div class="intro-container">
+
+                <div class="intro-img">
+                    <img src="{%static 'myapp/images/8.jpg'%}" width="50%">
+                </div>
+                <div class="intro-text">
+                    <h1 class="m-f"><p id="p1">Virtual Hospital</p></h1>
+                        <span class="text1"><p id="p2"></p>Let's build a healthy world.</p></span>
+                        <span class="text2"><p id="p3">Facing problem to appoint a doctor and want monitor yourself</p></span>
+                        <span class="text3"><p id="p4">from home?</p></span>
+                        <span class="text4"><p id="p5">That's easy now!</p></span>
+                        <a href="{%url 'register'%}" class="btn btn-trans">Register Now!</a>
+                </div>
+            </div>
+
+        <!-- </section> -->
+        <section class="services">
+            <div class="service-content">
+                <div class="bucket">
+                    <img src="{%static 'myapp/images/15.jpg'%}">
+            
+                     <h1>Daily Monitering</h1>
+                    
+                     <p>
+                        It has become very important nowadays to keep a daily track of bloodpressure,diabetes,pulserate and moreover.So we have brought facility of monitering yourself on the daily basis and monitering your health daily.
+                     </p>
+                </div>
+                <div class="bucket">
+                    <img src="{%static 'myapp/images/16.jpg'%}">
+                    <h1>Virtual Prescription</h1>
+                    <p>
+                        We have taken the doctor patient realtion into a new way of interactionby facilitating virtual prescription with remainders for ur medicine and many more.
+                    </p>
+                </div> 
+                <div class="bucket">
+                    <img src="{%static 'myapp/images/17.jpg'%}">
+                    <h1>Panel of Best Doctors</h1>
+                    <p>
+                        We have brought your best doctors where you can choose your own doctor,get appointmentfor them and additionally they can even monitor your daily diets, your health 24*7.You can have your video appointmentas well as more convenient way of interaction.
+                    </p>
+                </div> 
+
+            </div>
+        </section>
+
+<script>
+    document.getElementById("p1");
+    document.getElementById("p2");
+    document.getElementById("p3");
+    document.getElementById("p4");
+    document.getElementById("p5");
+    document.getElementById("p6");
+</script>
+
+
+
+
+<footer>
+    <div class="w-80">
+        <div class="footer-box">
+            <h2><a href="service.html">Services</h2></a>
+                <a href="#">Daily Monitoring</a>
+                <a href="#">Meet Renowed Doctors</a>
+                <a href="#">Virtual Prescription</a>
+                <a href="#">Upadate Patient Record</a>
+                <a href="#">Notification for Patients</a>
+        </div>
+        
+        <div class="footer-box">
+            <h2><a href="contact.html">Contact US</h2></a>
+            <a href="#">Post a Query</a>
+            <a href="#">Search Nearby Hospitals</a>
+            <a href="#">Emergency Numbers List</a>
+            <a href="#">Ask Question</a>
+        </div>
+        
+        <p>Copyright &copy;2020 VIRTUAL HOSPITAL</p>
+    </div>
+
+</footer>
+</body>
 
 </html>

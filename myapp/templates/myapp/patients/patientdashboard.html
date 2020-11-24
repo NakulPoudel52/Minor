@@ -88,7 +88,7 @@
                 <a class="nav-link" href="{%url 'profile_patient'%}">Profile</a>
               </li>
             <li class="nav-item active">
-              <a class="nav-link" href="#">Daily monitoring </a>
+              <a class="nav-link" href="{%url 'dailymonitoring'%}">Daily monitoring </a>
             </li>
             <li class="nav-item active">
               <a class="nav-link" href="{%url 'appointment_status' %}">Appointment status</a>
@@ -108,7 +108,14 @@
           </form>
         </div>
       </nav>
-      
+      {% for message in messages %}
+      <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        {{ message }}
+      </div>
+    {% endfor %}
     {% block body %}
     {% endblock %}
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
