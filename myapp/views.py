@@ -23,8 +23,10 @@ def show_loginpage(request):
       check = request.user.type.user_type
       print(check)
       if check==1:
+            return redirect('profile_doctor')
             return render(request,'myapp/doctor/doctordashboard.html',{'wallet':request.user.doctor_intro.wallet})
       elif check==2:
+            return redirect('profile_patient')
             return render(request,'myapp/patients/patientdashboard.html',{'wallet':request.user.patient_intro.wallet})
             print(request.user.patient_intro.wallet)
       else:
@@ -59,11 +61,13 @@ def do_login(request):
                   if not doctor_profile.objects.filter(user=request.user).first():
                         print('**********************************************')
                         doctor_profile(user = request.user).save()
-                  return render(request,'myapp/doctor/doctordashboard.html',{'wallet':request.user.doctor_intro.wallet})
+                  return redirect('profile_doctor')
+                  return render(request,'myapp/doctor/profile.html',{'wallet':request.user.doctor_intro.wallet})
             elif check==2:
                   if not patients_profile.objects.filter(user=request.user).first():
                         patients_profile(user = request.user).save()
-                  return render(request,'myapp/patients/patientdashboard.html',{'wallet':request.user.patient_intro.wallet})
+                  return redirect('profile_patient')
+                  return render(request,'myapp/patients/profile.html',{'wallet':request.user.patient_intro.wallet})
             else:
                   return HttpResponseRedirect('admin')
       else:
@@ -88,7 +92,8 @@ def profile_doctor(request):
       #h_form = HospitalForm()
       context = {'d_form':d_form,
                   'schedule':sdl,
-                  'days':['sunday','monday','tuesday','wednesday','thursday','Friday','saturday'],}      
+                  'days':['sunday','monday','tuesday','wednesday','thursday','Friday','saturday'],
+                  'wallet':request.user.doctor_intro.wallet,}      
       return render(request,"myapp/doctor/profile.html",context)
 
 def scheduler(request):
@@ -158,15 +163,18 @@ def profile_patient(request):
       #h_form = HospitalForm()
       context = {'p_form':p_form,
                   
-                  'days':['sunday','monday','tuesday','wednesday','thursday','Friday','saturday'],}      
-      
+                  'days':['sunday','monday','tuesday','wednesday','thursday','Friday','saturday'],
+                  'wallet':request.user.patient_intro.wallet,
+      }    
+                  
       return render(request,"myapp/patients/profile.html",context)
 
 
 
 def request_appointment(request):
-      
+      print('1*************************************')
       if request.method == 'POST':
+            print('*************************************')
             print(request.POST["doctor"])
             
             did = int(request.POST["doctor"])
@@ -188,15 +196,16 @@ def request_appointment(request):
                         
                         dtr = doctor_profile.objects.get(pk=did)
                         new = patients_profile.objects.filter(user=request.user)
-                        new.update(wallet = request.user.patient_intro.wallet - dtr.feesdetail).save()
-                        dtr(wallet = dtr.feesdetail+dtr.wallet).save()
+                        new.update(wallet = request.user.patient_intro.wallet - dtr.feesdetail)
+                        dtr.wallet = dtr.feesdetail+dtr.wallet
+                        dtr.save()
                         n.doctors = dtr
                         n.patients = request.user.patient_intro
                         n.meeting = ra
                         n.save()
                         messages.success(request, 'Your appointment was send successfully!')
             else:
-                  print('*************************************')
+                  
                   return render(request,"myapp/patients/requestappointment.html",{"request_appointment_form":request_appointment_form,"form_error":True})
                   print(request_appointment_form.errors) 
 
@@ -207,28 +216,31 @@ def request_appointment(request):
             
             #print('*************************************')
             print(request_appointment_form_form.errors)     
-      
+      print('2*************************************')
       request_appointment_form = UserAppointmentRequestForm()
       notification_form = NotificationForm()
-      doctorlist = doctor_profile.objects.all()
+      #doctorlist = doctor_profile.objects.all()
+      #hospitals = hospital.objects.all()
+      #sdl = schedule.objects.all()
+      doctorlist = doctor_profile.objects.get_queryset().order_by('id')
       page = request.GET.get('page', 1)
-
-      paginator = Paginator(doctorlist, 2)
+      
+      paginator = Paginator(doctorlist, 4)
       try:
             doctors = paginator.page(page)
       except PageNotAnInteger:
             doctors = paginator.page(1)
       except EmptyPage:
             doctors = paginator.page(paginator.num_pages)
-
-      hospitals = hospital.objects.all()
-      sdl = schedule.objects.all()
+      #print(sdl)
       context = {"doctors":doctors,
-      "hospitals":hospitals,
+      # "hospitals":hospitals,
       "request_appointment_form":request_appointment_form,
       "notification_form":notification_form,
       'days':['sunday','monday','tuesday','wednesday','thursday','Friday','saturday'],
-      'schedule':sdl,
+      #'schedule':sdl,
+      'wallet':request.user.patient_intro.wallet,
+      
       }
       return render(request,"myapp/patients/requestappointment.html",context)
 
@@ -236,7 +248,8 @@ def request_appointment(request):
 def notification_patient(request):
       info = notification.objects.filter(patients=request.user)
 
-      context = {"info":info}
+      context = {"info":info,
+      'wallet':request.user.doctor_intro.wallet}
       return render(request,"myapp/patients/notification.html",context)
 def notify(request):
       flag = None
@@ -287,7 +300,8 @@ def notify(request):
       return render(request,"myapp/doctor/notification.html",context)
 def appointment_status(request):
       n = notification.objects.all().filter(patients=request.user.patient_intro).order_by('-timestamp')
-      context = {'status':n}
+      context = {'status':n,
+      'wallet':request.user.patient_intro.wallet,}
       return render(request,'myapp/patients/appointmentstatus.html',context)
 
 def dailymonitoring(request):
@@ -338,6 +352,7 @@ def dailymonitoring(request):
         'sp':sp,
         'dp':dp,
         'tsp':tsp,
+        'wallet':request.user.patient_intro.wallet
     })
 
 def search_hospital(request):
@@ -449,15 +464,15 @@ def search_doctors(request):
       except EmptyPage:
             doctors = paginator.page(paginator.num_pages)
 
-      hospitals = hospital.objects.all()
-      sdl = schedule.objects.all()
+      
       context = {"doctors":doctors,
-      "hospitals":hospitals,
+      
       "message":message,
       "request_appointment_form":request_appointment_form,
       "notification_form":notification_form,
       'days':['sunday','monday','tuesday','wednesday','thursday','Friday','saturday'],
-      'schedule':sdl,
+      
+      'wallet':request.user.patient_intro.wallet,
       }
       return render(request,"myapp/patients/requestappointment.html",context)
 #User.objects.annotate(similarity=TrigramSimilarity('username', test),).filter(similarity__gt=0.3).order_by('-similarity')

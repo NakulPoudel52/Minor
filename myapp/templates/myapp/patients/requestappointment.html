@@ -2,7 +2,7 @@
 {%load static %}
 {% load crispy_forms_tags %}
 {%block title%}
-panel
+request appointment
 {%endblock%}
 {%block body%}
 
@@ -13,139 +13,140 @@ panel
 
 {{ request_appointment_form.non_field_errors }}
 {%for doctor in doctors%}
-<section class="team-agile py-lg-5">
-    <div class="container py-sm-5 pt-5 pb-0">
-        <div class="title-section text-center pb-lg-5">
-            <h4>world of medicine</h4>
-            <h3 class="w3ls-title text-center text-capitalize">the medical staff</h3>
-        </div>
-        
-        <div class="row mt-5 pb-lg-5">
-            <div class="col-md-4 border p-0 my-auto">
-                <img src="{{doctor.profile_pic.url}}" class="img-fluid" alt="team-img" />
-            </div>
-            <div class="col-md-8 team-text mt-md-0 mt-5">
-                <h4>Dr. {{doctor.user.username}}</h4>
-                <small>{{doctor.specialization}}</small>
-                <p class="my-3"></p>
-                <ul class="list-group mb-3">
-                    <li class="list-group-item border-0">
-                        <i class="far fa-check-square  mr-3"></i>Virtual Hospital,Kathmandu</li>
-                    <li class="list-group-item border-0 py-0">
-                        <i class="far fa-check-square  mr-3"></i>
-                        NMC_ID  : {{doctor.NMC_ID}}  </li>
-                    <li class="list-group-item border-0">
-                        <i class="far fa-check-square  mr-3"></i>
-                        Hospitals :{%for hospital in doctor.hospitals.all%}<ol>{{hospital.name}},{{hospital.address}}</ol>
-                    {%endfor%}
-                    </li>
-                    <li class="list-group-item border-0 py-0">
-                        <i class="far fa-check-square  mr-3"></i>Appointment charge: RS.{{doctor.feesdetail}}
-                    </li>
-                    <li class="list-group-item border-0 py-0">
-                        <i class="far fa-check-square  mr-3"></i>Payment details: {{doctor.payment_details}}
-                    </li>
-                    <li class="list-group-item border-0">
-                        <i class="far fa-clock  mr-3"></i>
-                        <span class="ot"><button type="button" class=" btn btn-dark btn-sm" data-toggle="modal" data-target="#exampleModal">
-                            View Availability
-                          </button> </span>
-                    </li>
-                </ul>
-                
-               
-                
-                <button class="btn_apt btn-danger" data-toggle="modal" data-target="#exampleModalLabel2">make an appointment </button>
-            </div>
-        </div>
-        
-    </div>
-</section>
 
-
-<div class="modal fade" id="exampleModalLabel2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Fill details below to make an appointment</h3>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="wthree-info">
-
-                    <div class="login">
-                      {{ request_appointment_form.non_field_errors }}
-
-                        <form action="#" method="POST" enctype="multipart/form-data">
-                            {%csrf_token%}
-                            {{ form.non_field_errors }}
-                            
-                                {{ form.date.errors }}
-                                {{request_appointment_form.date|as_crispy_field}}
-                            
-                                {{ form.start_time.errors }}
-                                {{request_appointment_form.start_time|as_crispy_field}}
-                            
-                                {{ form.end_time.errors }}
-                                {{request_appointment_form.end_time|as_crispy_field}}
-
-                                {{ form.receipt.errors }}
-                                {{request_appointment_form.receipt|as_crispy_field}}
-                                
-                                {{notification_form.message_doctor|as_crispy_field}}
-
-                            
-                            
-                            
-                               
-                                <button value="{{doctor.pk}}" name="doctor" class="btn_apt">make an appointment </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Schedule</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-            
-          {%for i in days %}
-          {%for j in doctor.timing.all%}
-          {%if j.day == forloop.parentloop.counter%}
-          <div>{{i}}
-            <ol>start time:{{j.StartTime}}</ol>
-               
-           
-            
-            
-            <ol>Breakstarttime:<time>{{j.BreakStartTime}}</time></ol>
-            <ol>Break time:{{j.BreakEndTime}}</ol>
-            <ol>End time:{{j.EndTime}}</ol>
-            
-          </li>
+  <section class="team-agile py-lg-5">
+      <div class="container py-sm-5 pt-5 pb-0">
+          <div class="title-section text-center pb-lg-5">
+              <h4>world of medicine</h4>
+              <h3 class="w3ls-title text-center text-capitalize">the medical staff</h3>
           </div>
-          {%endif%}
-          {%endfor%}
-          {%endfor%}
-         
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
           
+          <div class="row mt-5 pb-lg-5">
+              <div class="col-md-4 border p-0 my-auto">
+                  <img src="{{doctor.profile_pic.url}}" class="img-fluid" alt="team-img" />
+              </div>
+              <div class="col-md-8 team-text mt-md-0 mt-5">
+                  <h4>Dr. {{doctor.user.username}}</h4>
+                  <small>{{doctor.specialization}}</small>
+                  <p class="my-3"></p>
+                  <ul class="list-group mb-3">
+                      <li class="list-group-item border-0">
+                          <i class="far fa-check-square  mr-3"></i>Virtual Hospital,Kathmandu</li>
+                      <li class="list-group-item border-0 py-0">
+                          <i class="far fa-check-square  mr-3"></i>
+                          NMC_ID  : {{doctor.NMC_ID}}  </li>
+                      <li class="list-group-item border-0">
+                          <i class="far fa-check-square  mr-3"></i>
+                          Hospitals :{%for hospital in doctor.hospitals.all%}<ol>{{hospital.name}},{{hospital.address}}</ol>
+                      {%endfor%}
+                      </li>
+                      <li class="list-group-item border-0 py-0">
+                          <i class="far fa-check-square  mr-3"></i>Appointment charge: RS.{{doctor.feesdetail}}
+                      </li>
+                      <li class="list-group-item border-0 py-0">
+                          <i class="far fa-check-square  mr-3"></i>Payment details: {{doctor.payment_details}}
+                      </li>
+                      <li class="list-group-item border-0">
+                          <i class="far fa-clock  mr-3"></i>
+                          <span class="ot"><button type="button" class=" btn btn-dark btn-sm" data-toggle="modal" data-target="#exampleModal{{doctor.pk}}">
+                              View Availability
+                            </button> </span>
+                      </li>
+                  </ul>
+                  
+                
+                  
+                  <button class="btn_apt btn-danger" data-toggle="modal" data-target="#exampleModalLabel2{{doctor.pk}}">make an appointment </button>
+              </div>
+          </div>
+          
+      </div>
+  </section>
+
+
+  <div class="modal fade" id="exampleModalLabel2{{doctor.pk}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h3>Fill details below to make an appointment</h3>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                  </button>
+              </div>
+              <div class="modal-body">
+                  <div class="wthree-info">
+
+                      <div class="login">
+                        {{ request_appointment_form.non_field_errors }}
+
+                          <form action="#" method="POST" enctype="multipart/form-data">
+                              {%csrf_token%}
+                              {{ form.non_field_errors }}
+                              
+                                  {{ form.date.errors }}
+                                  {{request_appointment_form.date|as_crispy_field}}
+                              
+                                  {{ form.start_time.errors }}
+                                  {{request_appointment_form.start_time|as_crispy_field}}
+                              
+                                  {{ form.end_time.errors }}
+                                  {{request_appointment_form.end_time|as_crispy_field}}
+
+                                  {{ form.receipt.errors }}
+                                  {{request_appointment_form.receipt|as_crispy_field}}
+                                  
+                                  {{notification_form.message_doctor|as_crispy_field}}
+
+                              
+                              
+                              
+                                
+                                  <button value="{{doctor.pk}}" name="doctor" class="btn_apt">make an appointment </button>
+                          </form>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+
+  <div class="modal fade" id="exampleModal{{doctor.pk}}" tabindex="-1" role="dialog" aria-labelledby="exampleModal" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModal">Schedule</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+              
+            {%for i in days %}
+            {%for j in doctor.timing.all%}
+            {%if j.day == forloop.parentloop.counter%}
+            <div>{{i}}
+              <ol>start time:{{j.StartTime}}</ol>
+                
+            
+              
+              
+              <ol>Breakstarttime:<time>{{j.BreakStartTime}}</time></ol>
+              <ol>Break time:{{j.BreakEndTime}}</ol>
+              <ol>End time:{{j.EndTime}}</ol>
+              
+            </li>
+            </div>
+            {%endif%}
+            {%endfor%}
+            {%endfor%}
+          
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            
+          </div>
         </div>
       </div>
-    </div>
   </div>
 {%endfor%}
 

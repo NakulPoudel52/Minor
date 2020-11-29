@@ -21,19 +21,22 @@
       </form>
     </div>
   </nav>
+  <br<br>
+  <div class="title-section text-center pb-lg-5">
+    <h2 class="text-primary">Future of Healthcare</h2>
+    <h3 class="w3ls-title text-center text-capitalize">Hospitals</h3>
+</div>
   {%for hospital in hospitals%}
   <section class="team-agile py-lg-5">
       <div class="container py-sm-5 pt-5 pb-0">
-          <div class="title-section text-center pb-lg-5">
-              <h4>world of medicine</h4>
-          </div>
+          
           
           <div class="row mt-5 pb-lg-5">
               <div class="col-md-4 border p-0 my-auto">
                   <img src="{{hospital.picture.url}}" class="img-fluid" alt="team-img" />
               </div>
               <div class="col-md-8 team-text mt-md-0 mt-5">
-                  <h4>Dr. {{hospital.name}}</h4>
+                  <h4>{{hospital.name}}</h4>
                   <small>{{hospital.address}}</small>
                   <p class="my-3"></p>
                   <ul class="list-group mb-3">
