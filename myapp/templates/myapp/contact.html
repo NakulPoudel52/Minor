@@ -8,19 +8,18 @@
     <link rel="stylesheet" href="{% static 'myapp/css/contact.css'%}">
 </head>
 <body>
-    <div class="nav">
-        <ul>
-          <li><a href="index.html">VIRTUAL HOSPITAL</a></li>
-            <li><a href="service.html">Services</a>
-               
-            </li>
-
-            <li><a href="gallery.html">Gallery</a></li>
-            <li><a href="login.html">Login</a></li>
-            <li><a href="contact.html">Contact</a></li>
-        </ul>
-        
-    </div> 
+  <div class="topnav">
+    <div class="home"><a href="{%url 'searchhospital'%}" >Search Hospitals
+    </a></div>
+    <div class="contact"><a href="{%url 'contact'%}">Contact</a></div>
+    <div class="login"><a href="{%url 'show_login'%}">Login</a></div>
+    <div class="home"><a href="index.html">Home</a></div>
+    
+    <div class="search-container">
+    <h2>VH</h1>
+    </div>
+    
+</div>
     <h2 >Contact Form</h2>
     <div class="container">
       <form action="action_page.php">
@@ -36,6 +35,8 @@
           <option value="nepal">Nepal</option>
           <option value="canada">Canada</option>
           <option value="usa">USA</option>
+          <option value="Brazil">Brazil</option>
+          <option value="Brazil">Australia</option>
         </select>
     
         <label for="subject">Subject</label>
@@ -45,49 +46,27 @@
         </form>
       </div>
     </div>
-    <section>
-    <h2>OUR TEAM</h2>
-    <img src="{%static 'myapp/images/jk1.JPG'}" width="25%">
-    <p>Name:Jeevan Kaphle<br>Contact:+9779843434146</p>
-  </section>
-
-
-
-
-
-    
-<footer>
+ 
+   <footer>
   <div class="w-80">
       <div class="footer-box">
-          <h2><a href="service.html">Services</h2></a>
-              <a href="#">Daily Monitoring</a>
-              <a href="#">Meet Renowed Doctors</a>
-              <a href="#">Virtual Prescription</a>
-              <a href="#">Upadate Patient Record</a>
-              <a href="#">Notification for Patients</a>
+          <h2><a="service.html">Services</h2></a>
+              <a >Daily Monitoring</a>
+              <a>Meet Renowed Doctors</a>
+              <a >Virtual Prescription</a>
+              <a>Upadate Patient Record</a>
+              <a >Notification for Patients</a>
       </div>
-      <div class="footer-box">
-          <h2><a href="#">About Us</a></h2>
-          <a href="#">Virtual hospital</a>
-          <a href="#">Our Team</a>
-          <a href="#">Management</a>
-          <a href="#">Carrers</a>
-      </div>
+      
       <div class="footer-box">
           <h2><a href="contact.html">Contact US</h2></a>
-          <a href="#">Post a Query</a>
-          <a href="#">Search Nearby Hospitals</a>
-          <a href="#">Emergency Numbers List</a>
-          <a href="#">Ask Question</a>
+          <a >Post a Query</a>
+          <a>Search Nearby Hospitals</a>
+          <a >Emergency Numbers List</a>
+          <a>Ask Question</a>
       </div>
-      <div class="footer-box">
-          <h2><a href="#">Facilities</a></h2>
-          <a href="#">Daily Monitoring</a>
-          <a href="#">patient Dashboard</a>
-          <a href="#">Doctor Dashboar</a>
-          <a href="#">Patient-doctor Interaction</a>
-      </div>
-      <p>Copyright &copy;2020 Jeevan Kaphle</p>
+      
+      <p>Copyright &copy;Virtaul Hospital</p>
   </div>
 </body>
 </html>
