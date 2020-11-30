@@ -16,6 +16,9 @@ from django.contrib.postgres.search import TrigramDistance,TrigramSimilarity
 # Create your views here.
 def show_indexpage(request):
       return render(request,"myapp/index.html")
+def show_contactpage(request):
+      return render(request,"myapp/contact.html")
+
 def show_loginpage(request):
       if not request.user.is_authenticated:
             return render(request, "myapp/login.html", {"message": None})
