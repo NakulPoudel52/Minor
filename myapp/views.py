@@ -153,7 +153,8 @@ def scheduler(request):
 
 
       s_form = ScheduleForm()
-      context = {'s_form':s_form,'days':['sunday','monday','tuesday','wednesday','thursday','Friday','saturday']}
+      context = {'s_form':s_form,'days':['sunday','monday','tuesday','wednesday','thursday','Friday','saturday'],
+      'wallet':request.user.doctor_intro.wallet}
       return render(request,"myapp/doctor/schedule.html",context)
 def profile_patient(request):
       if request.method == 'POST':
@@ -299,7 +300,8 @@ def notify(request):
       context = {"info":n,
       "flag":flag,
       'a_form':a_form,
-      'n_form':NotificationForm()}
+      'n_form':NotificationForm(),
+      'wallet':request.user.doctor_intro.wallet}
       return render(request,"myapp/doctor/notification.html",context)
 def appointment_status(request):
       n = notification.objects.all().filter(patients=request.user.patient_intro).order_by('-timestamp')
@@ -361,10 +363,11 @@ def dailymonitoring(request):
 def search_hospital(request):
       if request.method == 'POST':
             hname = request.POST['hospital']
-            h = hospital.objects.annotate(similarity=TrigramSimilarity('address',hname ),).filter(similarity__gt=0.2).order_by('-similarity')
+            print(hname)
+            h = hospital.objects.annotate(similarity=TrigramSimilarity('address',hname ),).filter(similarity__gt=0.1).order_by('-similarity')
             page = request.GET.get('page', 1)
 
-            paginator = Paginator(h, 2)
+            paginator = Paginator(h, 5)
             try:
                   hospitals = paginator.page(page)
             except PageNotAnInteger:
@@ -486,46 +489,54 @@ def validation(request,did,date,start_time,end_time,user):
             return True
       else:
             print('2*****************************************')
+            print(date)
             d = doctor_profile.objects.get(pk=did)
             mts = d.meetings.all()
-
+   
             for mt in mts:
                   detail = mt.meeting
+                  print('check')
+                  print(detail.date)
                   if detail.date == date:
                         print('3*****************************************')
-                        if not (start_time<detail.start_time) and (end_time>detail.end_time):
-                              print('Time slot not available! Try another start and end time')
+                        print(start_time,end_time)
+                        print(detail.start_time,detail.end_time)
+                        if  (start_time<=detail.start_time) and (end_time>=detail.end_time):
+                              print('Time slot not available!!!The time interval you choosed is already reserved. Please Try another Start and End Time. ')
                               
-                              messages.error(request, 'Time slot not available')
+                              messages.error(request, 'Time slot not available!!!The time interval you choosed is already reserved. Please Try another Start and End Time')
                               return True
-                        else:
-                              print('4*****************************************')
-                              #d = doctor_profile.objebijap123cts.get(pk=did)
-                              day = date.weekday()+2
-                              if day==8:
-                                    day=1
-                              print(day)
-                              t = d.timing.filter(day=day).first()
-                              if t :
-                                    try:
-                                          if not (start_time>=t.StartTime and t.BreakStartTime<=end_time) or (start_time>=t.BreakEndTime and end_time<t.EndTime):
-                                                print('doctor not available1')
-                                                
-                                                messages.error(request,  'doctor not available')
-                                                return True
-                                    except TypeError:
-                                          if not (start_time>=t.StartTime and end_time<t.EndTime):
-                                                print('doctor not available1')
-                                                
-                                                messages.error(request,  'doctor not available')
-                                                return True
-                                          
-                              else:
-                                    print('doctor not available2')
-                                    
-                                    messages.error(request, 'doctor not available')
-                                    return True
-      
+            print('4*****************************************')
+            #d = doctor_profile.objebijap123cts.get(pk=did)
+            day = date.weekday()+2
+            if day==8:
+                  day=1
+            print(day)
+            t = d.timing.filter(day=day).first()
+            print(t)
+            
+                  
+                        
+            if t :
+                  try:
+                        print(start_time,t.StartTime,t.BreakStartTime,end_time,t.BreakEndTime ,t.EndTime)
+                        if ((start_time>end_time) and (start_time<t.StartTime) or (start_time<=t.BreakEndTime and end_time>=t.BreakStartTime) or (end_time>t.EndTime)):
+                              print('doctor not available1')
+                              
+                              messages.error(request,  'doctor not available')
+                              return True
+                  except TypeError:
+                        if not ((start_time>end_time) and (start_time<t.StartTime) or (end_time>t.EndTime)):
+                              print('doctor not available1')
+                              
+                              messages.error(request,  'doctor not available')
+                              return True
+                        
+            else:
+                  print('doctor not available2')
+                  
+                  messages.error(request, 'doctor not available')
+                  return True
 
                     
             

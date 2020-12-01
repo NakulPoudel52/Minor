@@ -125,7 +125,7 @@ class meeting_details(models.Model):
     start_time = models.TimeField( null=True)
     end_time = models.TimeField(null=True)
     meeting_name = models.TextField(max_length=50,blank =True)
-    receipt = models.ImageField(upload_to = 'receipt')
+    # receipt = models.ImageField(upload_to = 'receipt')
 
 class notification(models.Model):
     patients = models.ForeignKey(patients_profile,on_delete=models.CASCADE)

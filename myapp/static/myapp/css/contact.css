@@ -1,91 +1,91 @@
-body{
-    margin: 0;
-    background: #f2f2f2;
-    width: 100%;
+@import url('https://fonts.googleapis.com/css2?family=Aclonica&display=swap');
+.m-f{
+  font-family: 'Aclonica', sans-serif;
 }
-body h2{
-  color: #fa4299;
-  font-family: cursive;
-  padding: 0px;
-  margin: 0px;
-}
-.topnav {
-  background-color: #333;
-  overflow: hidden;
-  height:8.3%;
+.m-f{
+  margin-top: 0.5%;
+  padding-left:29%;
+  font-size: 3vw;
   
 }
-
-/* Style the links inside the navigation bar */
-.topnav a {
-  float: right;
-  color: #f2f2f2;
-  text-align: center;
-  padding: 1% 2%;
-  text-decoration: none;
-  font-size: 110%;
-}
-
-
-
-/* Change the color of links on hover */
-.topnav a:hover {
-  background-color: rgb(63, 10, 252);
-  color: white;
-}
-
-/* Add a color to the active/current link */
-.topnav a {
-  background-color: #333;
-  color: white;
-}
-.topnav .search-container {
-  float: left;
-  margin-left: 4px;
-}
-
-.topnav input[type=text] {
-  padding: 6px;
-  margin-top: 8px;
-  font-size: 17px;
-  border: none;
-}
+/* Add a black background color to the top navigation */
+.topnav {
+    background-color: #333;
+    overflow: hidden;
+    height:8.3%;
+    
+  }
+  
+  /* Style the links inside the navigation bar */
+  .topnav a {
+    float: right;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 1% 2%;
+    text-decoration: none;
+    font-size: 110%;
+  }
 
 
+  
+  /* Change the color of links on hover */
+  .topnav a:hover {
+    background-color: rgb(63, 10, 252);
+    color: white;
+  }
 
-
-.topnav .search-container button {
-  float: right;
-  padding: 6px 10px;
-  margin-top: 8px;
-  margin-right: 16px;
-  background: #ddd;
-  font-size: 20px;
-  border: none;
-  cursor: pointer;
-}
-.topnav .search-container button:hover {
-  background: #ccc;
-}
-@media screen and (max-width: 600px) {
+  /* Add a color to the active/current link */
+  .topnav a {
+    background-color: #333;
+    color: white;
+  }
   .topnav .search-container {
-    float: none;
+    float: left;
+    margin-left: 4px;
   }
-  .topnav a, .topnav input[type=text], .topnav .search-container button {
-    float: none;
-    display: block;
-    text-align: left;
-    width: 100%;
-    margin: 0;
-    padding: 14px;
-  }
+  
   .topnav input[type=text] {
-    border: 1px solid #ccc;  
+    padding: 6px;
+    margin-top: 8px;
+    font-size: 17px;
+    border: none;
   }
-}
+  
+  
+  
+ 
+  .topnav .search-container button {
+    float: right;
+    padding: 6px 10px;
+    margin-top: 8px;
+    margin-right: 16px;
+    background: #ddd;
+    font-size: 20px;
+    border: none;
+    cursor: pointer;
+  }
+  .topnav .search-container button:hover {
+    background: #ccc;
+  }
+  @media screen and (max-width: 600px) {
+    .topnav .search-container {
+      float: none;
+    }
+    .topnav a, .topnav input[type=text], .topnav .search-container button {
+      float: none;
+      display: block;
+      text-align: left;
+      width: 100%;
+      margin: 0;
+      padding: 14px;
+    }
+    .topnav input[type=text] {
+      border: 1px solid #ccc;  
+    }
+  }
 
 
-footer{
+/* footer{
   width: 100%;
   float: left;
   color: white;
@@ -108,19 +108,19 @@ footer .footer-box a{
 footer .footer-box a:hover{
   text-decoration: none;
   color: red;
-}
-footer p{
+} */
+/* footer p{
   clear: both;
-  background-color:brown;
-  padding: 10px;
+  background-color:rgb(31, 2, 2);
+  padding: -10px;
   text-align: center;
-  color: white;
+  color: rgb(224, 213, 213);
 }
 section p{
-  color:brown;
+  color:rgb(9, 0, 14);
   text-transform: capitalize;
   font-family: cursive;
-}
+} */
 /* Style inputs with type="text", select elements and textareas */
 input[type=text], select, textarea {
   width: 100%; /* Full width */
@@ -154,3 +154,36 @@ input[type=submit]:hover {
   background-color: #f2f2f2;
   padding: 20px;
 }
+}
+/* footer{
+  width: 100%;
+  float: left;
+  color: white;
+padding-top: 20px;
+padding-left: 10px;
+background: rgb(75, 71, 71);
+}
+
+footer .footer-box{
+  width: 50%;
+  float: left;
+  height: 40%;
+}
+footer .footer-box a{
+  display: block;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  color: white;
+  font-size: 20px;
+  text-transform: capitalize;
+}
+footer .footer-box a:hover{
+  text-decoration: none;
+  color: rgb(132, 0, 255);
+} */
+/* footer p{
+  clear: both;
+  background-color:rgb(14, 13, 13);
+  padding: -10px;
+  text-align: center;
+  color: white;
+} */

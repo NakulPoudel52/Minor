@@ -25,7 +25,7 @@ class UserAppointmentRequestForm(forms.ModelForm):
 
     class Meta:
         model = meeting_details
-        fields = ['date','start_time','end_time','receipt']
+        fields = ['date','start_time','end_time']
         widgets = {
             'date': DateInput(attrs={'type': 'date'}),
             'start_time': TimeInput(attrs={'type':'time'}),

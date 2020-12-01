@@ -210,6 +210,7 @@ footer .footer-box{
     width: 25%;
     float: left;
     height: 100%;
+    padding: 10px;
 }
 footer .footer-box a{
     display: block;
@@ -224,7 +225,7 @@ footer .footer-box a:hover{
 }
 footer p{
     clear: both;
-    background-color:brown;
+    background-color:rgb(10, 10, 10);
     padding: 10px;
     text-align: center;
     color: white;
