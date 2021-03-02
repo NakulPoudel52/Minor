@@ -150,7 +150,8 @@ def scheduler(request):
 
 
       s_form = ScheduleForm()
-      context = {'s_form':s_form,'days':['sunday','monday','tuesday','wednesday','thursday','Friday','saturday']}
+      context = {'s_form':s_form,'days':['sunday','monday','tuesday','wednesday','thursday','Friday','saturday'],
+      'wallet':request.user.doctor_intro.wallet,}
       return render(request,"myapp/doctor/schedule.html",context)
 def profile_patient(request):
       if request.method == 'POST':
@@ -290,14 +291,65 @@ def notify(request):
             # print('done*************************')
             # flag = True
             
-      n = notification.objects.all().filter(doctors=request.user.doctor_intro)
+            
+            
+      n = notification.objects.all().filter(doctors=request.user.doctor_intro,read=False)
       print(n)
       a_form = AckForm()
+      
+      
+      
       context = {"info":n,
       "flag":flag,
       'a_form':a_form,
-      'n_form':NotificationForm()}
+      'n_form':NotificationForm(),
+      'wallet':request.user.doctor_intro.wallet
+      }
       return render(request,"myapp/doctor/notification.html",context)
+def appointments_doctors(request):
+      n = notification.objects.all().filter(doctors=request.user.doctor_intro).order_by('-timestamp')
+      print(n)
+      context = {'status':n,
+      'wallet':request.user.doctor_intro.wallet,}
+
+      return render(request,'myapp/doctor/myappointments.html',context)
+def monitor_patient(request,patient_id):
+      patient=patients_profile.objects.get(pk=patient_id)
+      records = Monitoring.objects.filter(patient=patient)
+      tem = []
+      ts = []
+      sp = []
+      dp = []
+      tsp = []
+      for record in records:
+            if record.subject == 'temperature':
+                  tem.append(record.value1)
+                  print(type(record.value1))
+                  t = record.timestamp.strftime("%m/%d/%Y, %H:%M:%S")  
+                  print(type(t))  
+                  ts.append(t)
+                  print(tem,ts)
+            elif record.subject == 'pressure':
+                  sp.append(record.value1)
+                  dp.append(record.value2)
+                  t = record.timestamp.strftime("%m/%d/%Y, %H:%M:%S")  
+                  tsp.append(t)
+
+
+
+
+
+      return render(request,'myapp/doctor/monitor_patient.html',{
+       
+        'tem':tem,
+        'ts':ts,
+        'sp':sp,
+        'dp':dp,
+        'tsp':tsp,
+        'wallet':request.user.doctor_intro.wallet
+    })
+
+
 def appointment_status(request):
       n = notification.objects.all().filter(patients=request.user.patient_intro).order_by('-timestamp')
       context = {'status':n,
@@ -357,8 +409,11 @@ def dailymonitoring(request):
 
 def search_hospital(request):
       if request.method == 'POST':
+            print('in')
             hname = request.POST['hospital']
+            print(hname)
             h = hospital.objects.annotate(similarity=TrigramSimilarity('address',hname ),).filter(similarity__gt=0.2).order_by('-similarity')
+            print(h)
             page = request.GET.get('page', 1)
 
             paginator = Paginator(h, 2)
@@ -417,40 +472,55 @@ def search_hospital(request):
 def search_doctors(request):
       message = None
       if request.method == 'POST'  :
+            print('*************************************')
             print(request.POST["doctor"])
             
             did = int(request.POST["doctor"])
             request_appointment_form = UserAppointmentRequestForm(request.POST,request.FILES)
             notification_form = NotificationForm(request.POST)
             if request_appointment_form.is_valid() and notification_form.is_valid():
-                  
                   print(request_appointment_form.errors)
-                  print('*************************************')
-                  print(notification_form.errors)
-                  ra = request_appointment_form.save()
-                  n=notification_form.save(commit=False)
+                  date  = request_appointment_form.cleaned_data.get('date')
+                  start_time = request_appointment_form.cleaned_data.get('start_time')
+                  end_time = request_appointment_form.cleaned_data.get('end_time')
+                  if not validation(request=request,did=did,date=date,start_time=start_time,end_time=end_time,user=request.user):
+                        print(start_time,type(start_time),end_time,type(end_time))
+                        #10:00:00 <class 'datetime.time'> 11:00:00 <class 'datetime.time'>
+                        print('*************************************')
+                        print(notification_form.errors)
+                        ra = request_appointment_form.save()
+                        n=notification_form.save(commit=False)
+                        
+                        
+                        dtr = doctor_profile.objects.get(pk=did)
+                        new = patients_profile.objects.filter(user=request.user)
+                        new.update(wallet = request.user.patient_intro.wallet - dtr.feesdetail)
+                        dtr.wallet = dtr.feesdetail+dtr.wallet
+                        dtr.save()
+                        n.doctors = dtr
+                        n.patients = request.user.patient_intro
+                        n.meeting = ra
+                        n.save()
+                        messages.success(request, 'Your appointment was send successfully!')
+            else:
                   
-                  
-                  dtr = doctor_profile.objects.get(pk=did)
-                  n.doctors = dtr
-                  n.patients = request.user.patient_intro
-                  n.meeting = ra
-                  n.save()
+                  return render(request,"myapp/patients/requestappointment.html",{"request_appointment_form":request_appointment_form,"form_error":True})
+                  print(request_appointment_form.errors) 
 
-                  message = True
             return redirect('request_appointment')
       
                   # usr = request.user
                   # n(doctors=dtr,patients=usr).save()
             
-            print('*************************************')
-            print(notification_form.errors)     
+            #print('*************************************')
+            print(request_appointment_form_form.errors)    
       
       request_appointment_form = UserAppointmentRequestForm()
       notification_form = NotificationForm()
       doctor_name = request.GET["test"]
       #print(disease.objects.filter(Disease__icontains=disease_name)  )
       d = User.objects.annotate(similarity=TrigramSimilarity('username',doctor_name ),).filter(similarity__gt=0.2).order_by('-similarity')
+      print(d)
       print(doctor_name)
       doctorlist = doctor_profile.objects.filter(user__in =d) 
       #doctorlist = doctor_profile.objects.all()
@@ -477,51 +547,62 @@ def search_doctors(request):
       return render(request,"myapp/patients/requestappointment.html",context)
 #User.objects.annotate(similarity=TrigramSimilarity('username', test),).filter(similarity__gt=0.3).order_by('-similarity')
 def validation(request,did,date,start_time,end_time,user):
+      valid = False
       print('1*****************************************')
       if not (user.patient_intro.wallet >= 500):
             messages.error(request, 'Recharge your wallet')
             return True
       else:
             print('2*****************************************')
+            print(date)
             d = doctor_profile.objects.get(pk=did)
             mts = d.meetings.all()
-
+   
             for mt in mts:
                   detail = mt.meeting
+                  print('check')
+                  print(detail.date)
                   if detail.date == date:
                         print('3*****************************************')
-                        if not (start_time<detail.start_time) and (end_time>detail.end_time):
+                        print(start_time,end_time)
+                        print(detail.start_time,detail.end_time)
+                        if  (start_time<=detail.start_time) and (end_time>=detail.end_time):
                               print('Time slot not available! Try another start and end time')
                               
-                              messages.error(request, 'Time slot not available')
+                              messages.error(request, 'Time slot not available! Try another start and end time')
                               return True
-                        else:
-                              print('4*****************************************')
-                              #d = doctor_profile.objebijap123cts.get(pk=did)
-                              day = date.weekday()+2
-                              if day==8:
-                                    day=1
-                              print(day)
-                              t = d.timing.filter(day=day).first()
-                              if t :
-                                    try:
-                                          if not (start_time>=t.StartTime and t.BreakStartTime<=end_time) or (start_time>=t.BreakEndTime and end_time<t.EndTime):
-                                                print('doctor not available1')
-                                                
-                                                messages.error(request,  'doctor not available')
-                                                return True
-                                    except TypeError:
-                                          if not (start_time>=t.StartTime and end_time<t.EndTime):
-                                                print('doctor not available1')
-                                                
-                                                messages.error(request,  'doctor not available')
-                                                return True
-                                          
-                              else:
-                                    print('doctor not available2')
-                                    
-                                    messages.error(request, 'doctor not available')
-                                    return True
+            print('4*****************************************')
+            #d = doctor_profile.objebijap123cts.get(pk=did)
+            day = date.weekday()+2
+            if day==8:
+                  day=1
+            print(day)
+            t = d.timing.filter(day=day).first()
+            print(t)
+            
+                  
+                        
+            if t :
+                  try:
+                        print(start_time,t.StartTime,t.BreakStartTime,end_time,t.BreakEndTime ,t.EndTime)
+                        if ((start_time>end_time) and (start_time<t.StartTime) or (start_time<=t.BreakEndTime and end_time>=t.BreakStartTime) or (end_time>t.EndTime)):
+                              print('doctor not available1')
+                              
+                              messages.error(request,  'doctor not available')
+                              return True
+                  except TypeError:
+                        if not ((start_time>end_time) and (start_time<t.StartTime) or (end_time>t.EndTime)):
+                              print('doctor not available1')
+                              
+                              messages.error(request,  'doctor not available')
+                              return True
+                        
+            else:
+                  print('doctor not available2')
+                  
+                  messages.error(request, 'doctor not available')
+                  return True
+      return True           
       
 
                     

@@ -36,7 +36,7 @@
                 <h1>
                     
                     Welcome DR.
-                    <span>{{user.username}}</span>
+                    <span>{{user.username|title }}</span>
                 
             </h1>
     
@@ -84,13 +84,13 @@
             <li class="nav-item active">
                 <a class="nav-link" href="{%url 'profile_doctor'%}">Profile</a>
               </li>
-            <li class="nav-item active">
-              <a class="nav-link" href="#">Daily monitoring </a>
-            </li>
+            
             <li class="nav-item active">
               <a class="nav-link" href="{%url 'notification_doctor'%}">Notifications</a>
             </li>
-            
+            <li class="nav-item active">
+                <a class="nav-link" href="{%url 'appointments_doctors'%}">My appointments</a>
+              </li>
           </ul>
           
         </div>

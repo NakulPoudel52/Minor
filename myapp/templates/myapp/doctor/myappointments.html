@@ -1,10 +1,10 @@
-{%extends 'myapp/patients/patientdashboard.html'%}
+{%extends 'myapp/doctor/doctordashboard.html'%}
 
 {%block body%}
 <div class="container py-sm-5 pt-5 pb-0">
     <div class="title-section text-center pb-lg-5">
         <h4>Future of medicine</h4>
-        <h3 class="w3ls-title text-center text-capitalize">Your status</h3>
+        <h3 class="w3ls-title text-center text-capitalize">Your Appointments</h3>
     </div>
 {%for status in status%}
 {%if status.read %}
@@ -13,9 +13,9 @@
         <div class="container py-sm-5 pt-5 pb-0">
         <div class="d-flex p-2 bg-flex mb-1">Appointment NO:{{status.id}}</div>
          <div class="col-md-8 team-text mt-md-0 mt-5">
-            <h4>Doctor Name: DR.{{status.doctors.user.username|title}}</h4>
-            <small>{{status.doctors.specialization}}</small>
-            <p class="my-1">Message from doctor:{{status.message_patient}}</p>
+            <h4>Patient Name:{{status.patients.user.username|title}}</h4>
+            <small>Patient ID:{{status.patients.id}}</small>
+            <p class="my-1">Message from patient:{{status.message_patient}}</p>
             <ul class="list-group mb-3">
                <p >Details to join:</p>
                 <li class="list-group-item border-0">
@@ -39,6 +39,9 @@
                 <i class="far fa-clock  mr-3"></i>
                     <span class="ot">End_time:{{status.meeting.end_time}} </span>
                 </li>
+                <li class="list-group-item border-0 py-0">
+                    <i class="far fa-check-square  mr-3"></i><a href="{% url 'monitor_patient' status.patients.id %}" target=”_blank”>Monitor Patient </a>
+                </li>  
             </ul>
             
         </div>
@@ -49,39 +52,7 @@
         </div>
     </div>
     </section>
-{%else%}
-<section class="team-agile py-lg-5">
-    <div class="pb-5 typo-wthree">
-        <div class="container py-sm-5 pt-5 pb-0">
 
-        <div class="d-flex p-2 bg-flex mb-1">Appointment NO:{{status.id}}</div>
-         <div class="col-md-8 team-text mt-md-0 mt-5">
-            <h4>Doctor Name: DR.{{status.doctors.user.username|title}}</h4>
-            <small>{{status.doctors.specialization}}</small>
-            <ul class="list-group mb-3">
-                
-                 <li class="list-group-item border-0">
-                     <i class="fas fa-calendar-alt  mr-3"></i>
-                     <span class="ot">Date of Appointment:{{status.meeting.date}} </span>
-                 </li>
-                 <li class="list-group-item border-0">
-                 <i class="far fa-clock  mr-3"></i>
-                     <span class="ot">Start_time:{{status.meeting.start_time}}</span>
-                 </li>
-                 <li class="list-group-item border-0">
-                 <i class="far fa-clock  mr-3"></i>
-                     <span class="ot">End_time:{{status.meeting.end_time}} </span>
-                 </li>
-                 <li>
-                    <div class="d-flex p-2 bg-flex mb-1 .bg-info">status:<strong>Pending</strong></div>
-                 </li>
-             </ul>
-        </div>
-        
-        
-        </div>
-    </div>
-    </section>
 {%endif%}
 
 {%endfor%}

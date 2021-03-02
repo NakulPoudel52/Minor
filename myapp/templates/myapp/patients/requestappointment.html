@@ -8,25 +8,25 @@ request appointment
 
 
 
-
-
+<br><br>
+<div class="title-section text-center pb-lg-5">
+  <h2 class="text-primary">Future of Healthcare</h2>
+  <h3 class="w3ls-title text-center text-capitalize">Doctors</h3>
+</div>
 
 {{ request_appointment_form.non_field_errors }}
 {%for doctor in doctors%}
 
   <section class="team-agile py-lg-5">
       <div class="container py-sm-5 pt-5 pb-0">
-          <div class="title-section text-center pb-lg-5">
-              <h4>world of medicine</h4>
-              <h3 class="w3ls-title text-center text-capitalize">the medical staff</h3>
-          </div>
+          
           
           <div class="row mt-5 pb-lg-5">
               <div class="col-md-4 border p-0 my-auto">
                   <img src="{{doctor.profile_pic.url}}" class="img-fluid" alt="team-img" />
               </div>
               <div class="col-md-8 team-text mt-md-0 mt-5">
-                  <h4>Dr. {{doctor.user.username}}</h4>
+                  <h4>Dr. {{doctor.user.username|title }}</h4>
                   <small>{{doctor.specialization}}</small>
                   <p class="my-3"></p>
                   <ul class="list-group mb-3">
@@ -35,11 +35,13 @@ request appointment
                       <li class="list-group-item border-0 py-0">
                           <i class="far fa-check-square  mr-3"></i>
                           NMC_ID  : {{doctor.NMC_ID}}  </li>
-                      <li class="list-group-item border-0">
+                      {%comment%}
+                          <li class="list-group-item border-0">
                           <i class="far fa-check-square  mr-3"></i>
                           Hospitals :{%for hospital in doctor.hospitals.all%}<ol>{{hospital.name}},{{hospital.address}}</ol>
                       {%endfor%}
                       </li>
+                      {%endcomment%}
                       <li class="list-group-item border-0 py-0">
                           <i class="far fa-check-square  mr-3"></i>Appointment charge: RS.{{doctor.feesdetail}}
                       </li>

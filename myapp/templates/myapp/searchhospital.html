@@ -15,13 +15,14 @@
         </li>
         
       </ul>
-      <form class="form-inline my-2 my-lg-0">
+      <form class="form-inline my-2 my-lg-0" method="POST">
+        {%csrf_token%}
         <input class="form-control mr-sm-2" type="search" name="hospital" placeholder="Search" aria-label="Search">
         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
       </form>
     </div>
   </nav>
-  <br<br>
+  <br><br>
   <div class="title-section text-center pb-lg-5">
     <h2 class="text-primary">Future of Healthcare</h2>
     <h3 class="w3ls-title text-center text-capitalize">Hospitals</h3>

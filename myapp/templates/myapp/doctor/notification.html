@@ -3,6 +3,8 @@
 {% load crispy_forms_tags %}
 
 {% block body %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+
 {%if flag%}
 <script>alert('Done')
 </script>
@@ -35,10 +37,16 @@
                     <li class="list-group-item border-0">
                         <i class="far fa-check-square  mr-3"></i>
                         End time: {{info.meeting.end_time}} </li>
-
+                    {%comment%}
                     <li class="list-group-item border-0 py-0">
-                        <i class="far fa-check-square  mr-3"></i>View receipt:<a href="{{info.meeting.receipt.url}}" target="_blank">payment receipt</a></li>  
-
+                        <i class="far fa-check-square  mr-3"></i><a href="#" class="btn_apt" data-toggle="modal" data-target="#exampleModal">Monitor </a>
+                    </li>  
+                    {%endcomment%}
+                    <li>
+                       
+                    </li>
+                    
+                
                 </ul>
                 
                 <a href="#" class="btn_apt" data-toggle="modal" data-target="#exampleModalLabel2">Acknowledge appointment </a>
@@ -85,6 +93,85 @@
         </div>
     </div>
 </div>
+
+{%comment%}
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModal" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModal">Graph</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            
+            <div id="container" style="width: 75%;">
+  
+                <canvas id="line-chart"></canvas>
+              </div>
+          
+              {% for i in info.patients.monitor.suball %}
+               {%if i.subject == "temperature" %}
+                {{i.value1}}
+               {{i.timestamp}}
+               {%endif%}
+              {%endfor%}
+              <script>
+              var ctx = document.getElementById('line-chart').getContext('2d');
+              var lineChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+
+                  labels: [1,2,3,4],
+                  datasets: [
+                    {
+                      label: "temperature",
+                      data: [5,6,2,4]
+                    }
+                  ]
+                }
+              });
+              </script>
+              
+             
+
+              <div id="container" style="width: 75%;">
+  
+                <canvas id="pline-chart"></canvas>
+              </div>
+              <script>
+              var ctx = document.getElementById('pline-chart').getContext('2d');
+              var lineChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                  labels: {{tsp|safe}},
+                  datasets: [{
+                    label: "systolic",
+                    data: {{sp|safe}},
+                    backgroundColor: "rgba(255,99,132,0.2)",
+                  }, {
+                    label: "diastolic",
+                    data: {{dp|safe}},
+                    backgroundColor: "rgba(99,255,132,0.2)",
+                  }]
+                }
+                });
+              </script>
+              <div id="container" style="width: 75%;">
+                
+                <canvas id="bline-chart"></canvas>
+              </div>
+        
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          
+        </div>
+      </div>
+    </div>
+</div>
+{%endcomment%}
 {%endfor%}
 <!-- //Appointment modal -->
 <!-- js -->
