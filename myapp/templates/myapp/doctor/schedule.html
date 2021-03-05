@@ -4,18 +4,20 @@
 {% block title %}schedule{% endblock %}
 
 {% block body %}
+<div class="form-control mt-3 ml-3 mr-3">
 <table>
 <tr>
     <th>Day</th>
-    <th>starttime</th>
+    <th>Starttime</th>
     <th>Breakstarttime</th>
     <th>Breakendtime</th>
     <th>Endtime</th>
 </tr>
+
 {%for i in days%}
 <tr>
 
-<div>
+<div >
     <form method="POST">
         {%csrf_token%}
    <td>{{i}}</td> 
@@ -33,5 +35,6 @@
 </table>   
 
 </form>
+</div>
 
 {% endblock %}

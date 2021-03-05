@@ -92,7 +92,7 @@ def profile_doctor(request):
       #h_form = HospitalForm()
       context = {'d_form':d_form,
                   'schedule':sdl,
-                  'days':['sunday','monday','tuesday','wednesday','thursday','Friday','saturday'],
+                  'days':['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
                   'wallet':request.user.doctor_intro.wallet,}      
       return render(request,"myapp/doctor/profile.html",context)
 
@@ -150,7 +150,7 @@ def scheduler(request):
 
 
       s_form = ScheduleForm()
-      context = {'s_form':s_form,'days':['sunday','monday','tuesday','wednesday','thursday','Friday','saturday'],
+      context = {'s_form':s_form,'days':['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
       'wallet':request.user.doctor_intro.wallet,}
       return render(request,"myapp/doctor/schedule.html",context)
 def profile_patient(request):
@@ -164,7 +164,7 @@ def profile_patient(request):
       #h_form = HospitalForm()
       context = {'p_form':p_form,
                   
-                  'days':['sunday','monday','tuesday','wednesday','thursday','Friday','saturday'],
+                  'days':['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
                   'wallet':request.user.patient_intro.wallet,
       }    
                   
@@ -175,7 +175,7 @@ def profile_patient(request):
 def request_appointment(request):
       print('1*************************************')
       if request.method == 'POST':
-            print('*************************************')
+            print('2*************************************')
             print(request.POST["doctor"])
             
             did = int(request.POST["doctor"])
@@ -189,7 +189,7 @@ def request_appointment(request):
                   if not validation(request=request,did=did,date=date,start_time=start_time,end_time=end_time,user=request.user):
                         print(start_time,type(start_time),end_time,type(end_time))
                         #10:00:00 <class 'datetime.time'> 11:00:00 <class 'datetime.time'>
-                        print('*************************************')
+                        print('valid*************************************')
                         print(notification_form.errors)
                         ra = request_appointment_form.save()
                         n=notification_form.save(commit=False)
@@ -197,7 +197,7 @@ def request_appointment(request):
                         
                         dtr = doctor_profile.objects.get(pk=did)
                         new = patients_profile.objects.filter(user=request.user)
-                        new.update(wallet = request.user.patient_intro.wallet - dtr.feesdetail)
+                        new.update(wallet = request.user.patient_intro.wallet - int(dtr.payment_details))
                         dtr.wallet = dtr.feesdetail+dtr.wallet
                         dtr.save()
                         n.doctors = dtr
@@ -217,7 +217,7 @@ def request_appointment(request):
             
             #print('*************************************')
             print(request_appointment_form_form.errors)     
-      print('2*************************************')
+      print('3*************************************')
       request_appointment_form = UserAppointmentRequestForm()
       notification_form = NotificationForm()
       #doctorlist = doctor_profile.objects.all()
@@ -238,7 +238,7 @@ def request_appointment(request):
       # "hospitals":hospitals,
       "request_appointment_form":request_appointment_form,
       "notification_form":notification_form,
-      'days':['sunday','monday','tuesday','wednesday','thursday','Friday','saturday'],
+      'days':['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
       #'schedule':sdl,
       'wallet':request.user.patient_intro.wallet,
       
@@ -282,6 +282,8 @@ def notify(request):
                   ntf.message_patient = message_patient
                   ntf.read = True
                   ntf.save()
+                  messages.success(request, 'Meeting Schedulded!')
+
             return redirect('notification_doctor')
             # print(doctor)
             # patient_id = request.POST['patient']
@@ -540,20 +542,20 @@ def search_doctors(request):
       "message":message,
       "request_appointment_form":request_appointment_form,
       "notification_form":notification_form,
-      'days':['sunday','monday','tuesday','wednesday','thursday','Friday','saturday'],
+      'days':['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
       
       'wallet':request.user.patient_intro.wallet,
       }
       return render(request,"myapp/patients/requestappointment.html",context)
 #User.objects.annotate(similarity=TrigramSimilarity('username', test),).filter(similarity__gt=0.3).order_by('-similarity')
 def validation(request,did,date,start_time,end_time,user):
-      valid = False
-      print('1*****************************************')
+      
+      print('4*****************************************')
       if not (user.patient_intro.wallet >= 500):
             messages.error(request, 'Recharge your wallet')
             return True
       else:
-            print('2*****************************************')
+            print('5*****************************************')
             print(date)
             d = doctor_profile.objects.get(pk=did)
             mts = d.meetings.all()
@@ -562,16 +564,17 @@ def validation(request,did,date,start_time,end_time,user):
                   detail = mt.meeting
                   print('check')
                   print(detail.date)
+                  print(date)
                   if detail.date == date:
-                        print('3*****************************************')
+                        print('6*****************************************')
                         print(start_time,end_time)
                         print(detail.start_time,detail.end_time)
-                        if  (start_time<=detail.start_time) and (end_time>=detail.end_time):
+                        if  (start_time<=detail.end_time) and (end_time>=detail.start_time):
                               print('Time slot not available! Try another start and end time')
                               
                               messages.error(request, 'Time slot not available! Try another start and end time')
                               return True
-            print('4*****************************************')
+            print('7*****************************************')
             #d = doctor_profile.objebijap123cts.get(pk=did)
             day = date.weekday()+2
             if day==8:
@@ -585,7 +588,7 @@ def validation(request,did,date,start_time,end_time,user):
             if t :
                   try:
                         print(start_time,t.StartTime,t.BreakStartTime,end_time,t.BreakEndTime ,t.EndTime)
-                        if ((start_time>end_time) and (start_time<t.StartTime) or (start_time<=t.BreakEndTime and end_time>=t.BreakStartTime) or (end_time>t.EndTime)):
+                        if ((start_time>end_time) or (start_time<t.StartTime) or (start_time<=t.BreakEndTime and end_time>=t.BreakStartTime) or (end_time>t.EndTime)):
                               print('doctor not available1')
                               
                               messages.error(request,  'doctor not available')
@@ -602,7 +605,7 @@ def validation(request,did,date,start_time,end_time,user):
                   
                   messages.error(request, 'doctor not available')
                   return True
-      return True           
+      return False           
       
 
                     

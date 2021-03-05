@@ -6,7 +6,13 @@ request appointment
 {%endblock%}
 {%block body%}
 
-
+{% if messages %}
+{% for message in messages %}
+  <div class="text-light alert alert-{{ message.tags }}">
+    {{ message }}
+  </div>
+{% endfor %}
+{% endif %}
 
 <br><br>
 <div class="title-section text-center pb-lg-5">
@@ -22,7 +28,7 @@ request appointment
           
           
           <div class="row mt-5 pb-lg-5">
-              <div class="col-md-4 border p-0 my-auto">
+              <div class="col-md-3 border p-0 my-auto">
                   <img src="{{doctor.profile_pic.url}}" class="img-fluid" alt="team-img" />
               </div>
               <div class="col-md-8 team-text mt-md-0 mt-5">
@@ -43,11 +49,9 @@ request appointment
                       </li>
                       {%endcomment%}
                       <li class="list-group-item border-0 py-0">
-                          <i class="far fa-check-square  mr-3"></i>Appointment charge: RS.{{doctor.feesdetail}}
+                          <i class="far fa-check-square  mr-3"></i>Appointment charge: RS.{{doctor.payment_details}}
                       </li>
-                      <li class="list-group-item border-0 py-0">
-                          <i class="far fa-check-square  mr-3"></i>Payment details: {{doctor.payment_details}}
-                      </li>
+                    
                       <li class="list-group-item border-0">
                           <i class="far fa-clock  mr-3"></i>
                           <span class="ot"><button type="button" class=" btn btn-dark btn-sm" data-toggle="modal" data-target="#exampleModal{{doctor.pk}}">
@@ -94,8 +98,8 @@ request appointment
                                   {{ form.end_time.errors }}
                                   {{request_appointment_form.end_time|as_crispy_field}}
 
-                                  {{ form.receipt.errors }}
-                                  {{request_appointment_form.receipt|as_crispy_field}}
+                                  
+
                                   
                                   {{notification_form.message_doctor|as_crispy_field}}
 
@@ -132,8 +136,8 @@ request appointment
             
               
               
-              <ol>Breakstarttime:<time>{{j.BreakStartTime}}</time></ol>
-              <ol>Break time:{{j.BreakEndTime}}</ol>
+              <ol>Break start time:<time>{{j.BreakStartTime}}</time></ol>
+              <ol>Break end time:{{j.BreakEndTime}}</ol>
               <ol>End time:{{j.EndTime}}</ol>
               
             </li>
@@ -151,7 +155,7 @@ request appointment
       </div>
   </div>
 {%endfor%}
-
+<div class="pagination justify-content-center">
 {% if doctors.has_previous %}
         <a class="btn btn-outline-info mb-4" href="?page=1">First</a>
         <a class="btn btn-outline-info mb-4" href="?page={{ doctors.previous_page_number }}">Previous</a>
@@ -170,5 +174,5 @@ request appointment
         <a class="btn btn-outline-info mb-4" href="?page={{ doctors.paginator.num_pages }}">Last</a>
       {% endif %}
 
-  
+    </div>
 {%endblock%}

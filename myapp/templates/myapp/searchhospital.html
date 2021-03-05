@@ -1,8 +1,9 @@
 {%extends 'myapp/base.html'%}
+{% block title %}Search Hospitals{% endblock %}
 {%block body%}
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">Home</a>
+    <a class="navbar-brand" href="{%url 'index'%}">Home</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -56,6 +57,7 @@
   {%endfor%}
   
 
+<div class="pagination justify-content-center">
   {% if hospitals.has_previous %}
   <a class="btn btn-outline-info mb-4" href="?page=1">First</a>
   <a class="btn btn-outline-info mb-4" href="?page={{ hospitals.previous_page_number }}">Previous</a>
@@ -73,4 +75,5 @@
   <a class="btn btn-outline-info mb-4" href="?page={{ hospitals.next_page_number }}">Next</a>
   <a class="btn btn-outline-info mb-4" href="?page={{ hospitals.paginator.num_pages }}">Last</a>
 {% endif %}
+</div>
 {%endblock%}

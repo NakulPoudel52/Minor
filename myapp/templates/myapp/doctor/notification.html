@@ -1,15 +1,17 @@
 {%extends 'myapp/doctor/doctordashboard.html'%}
 {%load static%}
 {% load crispy_forms_tags %}
+{% block title %}Notifications{% endblock %}
 
 {% block body %}
-<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
-
-{%if flag%}
-<script>alert('Done')
-</script>
-{%endif%}
-
+{% if messages %}
+{% for message in messages %}
+  <div class="text-success alert alert-{{ message.tags }}">
+    {{ message }}
+  </div>
+{% endfor %}
+{% endif %}
+<br><br>
 <section class="team-agile py-lg-5">
     <div class="title-section text-center pb-lg-5">
         <h4>world of medicine</h4>
@@ -21,13 +23,13 @@
         
         
         <div class="row mt-5 pb-lg-5">
-            <div class="col-md-4 border p-0 my-auto">
+            <div class="col-md-3 border p-0 my-auto">
                 <img src="{{info.patients.profile_pic.url}}" class="img-fluid" alt="team-img" />
             </div>
             <div class="col-md-8 team-text mt-md-0 mt-5">
-                <h4>MR/S. {{info.patients.user.username}}</h4>
+                <h4>MR/S. {{info.patients.user.username |title}}</h4>
                 <small>PATIENT_Id:{{info.patients.id}}</small>
-                <p class="my-3">Message:{{info.message_patient}}</p>
+                <p class="my-3">Message:{{info.message_doctor}}</p>
                 <ul class="list-group mb-3">
                     <li class="list-group-item border-0">
                         <i class="far fa-check-square  mr-3"></i>Date: {{info.meeting.date}}</li>
@@ -94,84 +96,7 @@
     </div>
 </div>
 
-{%comment%}
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModal" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModal">Graph</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-            
-            <div id="container" style="width: 75%;">
-  
-                <canvas id="line-chart"></canvas>
-              </div>
-          
-              {% for i in info.patients.monitor.suball %}
-               {%if i.subject == "temperature" %}
-                {{i.value1}}
-               {{i.timestamp}}
-               {%endif%}
-              {%endfor%}
-              <script>
-              var ctx = document.getElementById('line-chart').getContext('2d');
-              var lineChart = new Chart(ctx, {
-                type: 'line',
-                data: {
 
-                  labels: [1,2,3,4],
-                  datasets: [
-                    {
-                      label: "temperature",
-                      data: [5,6,2,4]
-                    }
-                  ]
-                }
-              });
-              </script>
-              
-             
-
-              <div id="container" style="width: 75%;">
-  
-                <canvas id="pline-chart"></canvas>
-              </div>
-              <script>
-              var ctx = document.getElementById('pline-chart').getContext('2d');
-              var lineChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                  labels: {{tsp|safe}},
-                  datasets: [{
-                    label: "systolic",
-                    data: {{sp|safe}},
-                    backgroundColor: "rgba(255,99,132,0.2)",
-                  }, {
-                    label: "diastolic",
-                    data: {{dp|safe}},
-                    backgroundColor: "rgba(99,255,132,0.2)",
-                  }]
-                }
-                });
-              </script>
-              <div id="container" style="width: 75%;">
-                
-                <canvas id="bline-chart"></canvas>
-              </div>
-        
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          
-        </div>
-      </div>
-    </div>
-</div>
-{%endcomment%}
 {%endfor%}
 <!-- //Appointment modal -->
 <!-- js -->

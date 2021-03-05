@@ -7,23 +7,26 @@
 
 <div class="content-section form-group">
     <div class="media ">
-      <div class="text-center"><img class="rounded-circle account-img  text-center" src="{{ user.patient_intro.profile_pic.url }}">
+      <div class="text-center ml-3 mt-3"><img class="rounded-circle account-img  text-center" src="{{ user.patient_intro.profile_pic.url }}">
       </div>
       <div class="media-body">
        
     
       </div>
     </div>
-    <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        <fieldset class="form-group">
-            <legend class="border-bottom mb-4">Profile Info</legend>
-            {{p_form|crispy}}
-           
-        </fieldset>
-        <div class="form-group">
-            <button class="btn btn-outline-info" type="submit">Update</button>
-        </div>
-    </form>
+</div>
+<div class="content-section "><form method="POST" enctype="multipart/form-data">
+  {% csrf_token %}
+  <fieldset class="form-group">
+      <legend class="mx-auto" style="width: 200px;">Profile Info</legend>
+     <div class="form-control">{{p_form|crispy}}</div> 
+     
+  </fieldset>
+  <div class="form-group">
+      <button class="btn btn-outline-info mx-5" type="submit">Update</button>
   </div>
+</form>
+</div>
+    
+
 {%endblock%}

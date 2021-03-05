@@ -25,7 +25,7 @@ class UserAppointmentRequestForm(forms.ModelForm):
 
     class Meta:
         model = meeting_details
-        fields = ['date','start_time','end_time','receipt']
+        fields = ['date','start_time','end_time']
         widgets = {
             'date': DateInput(attrs={'type': 'date'}),
             'start_time': TimeInput(attrs={'type':'time'}),
@@ -44,7 +44,7 @@ class UserAppointmentRequestForm(forms.ModelForm):
         #0:50:00
         elapsed = datetime.combine(date.today(), end_time) - datetime.combine(date.today(), start_time)
         if elapsed > timedelta(minutes=30):
-            raise forms.ValidationError('Time period must be less than 30 minute')
+            raise forms.ValidationError('Time period must be less than 30 minute',)
 
 
 

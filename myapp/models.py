@@ -49,8 +49,8 @@ class doctor_profile(models.Model):
 
         img = Image.open(self.profile_pic.path)
 
-        if img.height > 300 or img.width > 500:
-            output_size = (450, 300)
+        if img.height > 400 or img.width > 450:
+            output_size = (400, 450)
             img.thumbnail(output_size)
             img.save(self.profile_pic.path)
 
@@ -98,7 +98,7 @@ class patients_profile(models.Model):
         img = Image.open(self.profile_pic.path)
 
         if img.height > 300 or img.width > 400:
-            output_size = (300, 400)
+            output_size = (400, 450)
             img.thumbnail(output_size)
             img.save(self.profile_pic.path)
 
@@ -125,7 +125,7 @@ class meeting_details(models.Model):
     start_time = models.TimeField( null=True)
     end_time = models.TimeField(null=True)
     meeting_name = models.TextField(max_length=50,blank =True)
-    receipt = models.ImageField(upload_to = 'receipt')
+    
 
 class notification(models.Model):
     patients = models.ForeignKey(patients_profile,on_delete=models.CASCADE)
